@@ -1,0 +1,109 @@
+@import url("https://fonts.googleapis.com/css2?family=Barrio&display=swap");
+
+/* Styles généraux */
+body {
+    margin: 0;
+    overflow: hidden;
+    background: #0a0a0a;
+    font-family: 'Barrio', cursive;
+}
+
+/* Carte MapLibre */
+#carte {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
+    border-radius: 1rem;
+}
+
+/* Grille de pièces d'échecs */
+.chess-grid {
+    position: fixed;
+    z-index: 10;
+    display: grid;
+    grid-template-columns: repeat(2, 180px); /* largeur réduite */
+    grid-template-rows: repeat(3, 180px);
+    gap: 20px;
+    padding: 40px;
+    top: 0;
+    left: 0;
+}
+
+.piece-container {
+    background: rgba(26, 26, 26, 0.95);
+    border: 2px solid #0ff;
+    border-radius: 12px;
+    padding: 10px;
+    box-shadow: 
+        0 4px 12px rgba(0,255,255,0.3),
+        0 0 20px rgba(0,255,255,0.2);
+    display: flex;
+    flex-direction: column;
+    width: 180px;
+    height: 180px;
+    backdrop-filter: blur(5px);
+}
+
+.piece-container > div:first-child {
+    flex: 1;
+    position: relative;
+    width: 100%;
+}
+
+.piece-label {
+    color: #0ff;
+    text-align: center;
+    margin-top: 6px;
+    padding: 4px;
+    font-size: 13px;
+    font-weight: bold;
+    text-transform: uppercase;
+    background: rgba(0, 255, 255, 0.1);
+    border-radius: 6px;
+    flex-shrink: 0;
+    text-shadow: 0 0 10px rgba(0,255,255,0.5);
+}
+
+/* Scanner futuristique */
+.scanner-dot {
+    position: relative;
+    width: 14px;
+    height: 14px;
+    background: #ff0000;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #ff0000, 0 0 20px rgba(255,0,0,0.5);
+}
+
+.scanner-dot .pulse1, .scanner-dot .pulse2 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border: 2px solid #ff0000;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    animation: scannerPulse 2s infinite;
+}
+
+.scanner-dot .pulse2 {
+    animation-delay: 0.5s;
+}
+
+@keyframes scannerPulse {
+    0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(2); opacity: 0; }
+}
+
+/* Ligne de scan */
+.scan-line {
+    position: fixed;
+    height: 2px;
+    width: 100%;
+    background: linear-gradient(90deg, transparent, #ff0000, transparent);
+    box-shadow: 0 0 15px #ff0000;
+    z-index: 5;
+    pointer-events: none;
+    left: 0;
+}
