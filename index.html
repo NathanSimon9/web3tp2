@@ -256,118 +256,137 @@
     </div>
     <div class="bar-value" id="barValue">0.0</div>
   </div>
+  
+ <!-- Right Panel -->
+<div class="right-panel">
 
-  <!-- Right Panel - Intelligence Data -->
-  <div class="right-panel">
-    <!-- Master Profile (caché par défaut) -->
+    <!-- Bouton switch centré en haut -->
+    <div class="top-switch-container">
+        <button id="toggleView" class="toggle-btn">SWITCH MODE</button>
+    </div>
+
+    <!-- MODE GLOBAL -->
+    <div id="globalContainer" style="display: flex; flex-direction: column; gap: 20px;">
+
+        <!-- SCAN GLOBAL -->
+        <div class="intel-section">
+            <div class="section-header">
+                <i class="bi bi-radar"></i>
+                <span>SCAN GLOBAL</span>
+            </div>
+            <div class="scan-display" id="scanDisplay">
+                <div class="scan-info">
+                    <div class="scan-target" id="scanTarget">MOSCOW</div>
+                    <div class="scan-coordinates" id="scanCoords">55.7558°N, 37.6173°E</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ANALYSE TACTIQUE -->
+        <div class="intel-section">
+            <div class="section-header">
+                <i class="bi bi-bar-chart"></i>
+                <span>ANALYSE TACTIQUE</span>
+            </div>
+            <div class="tactical-data">
+                <div class="data-row">
+                    <span class="data-label">Menaces détectées</span>
+                    <span class="data-value threat">12</span>
+                </div>
+                <div class="data-row">
+                    <span class="data-label">Opportunités</span>
+                    <span class="data-value opportunity">8</span>
+                </div>
+                <div class="data-row">
+                    <span class="data-label">Zones contrôlées</span>
+                    <span class="data-value neutral">64%</span>
+                </div>
+                <div class="data-row">
+                    <span class="data-label">Niveau défense</span>
+                    <span class="data-value success">OPTIMAL</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ACTIVITÉ RÉSEAU -->
+        <div class="intel-section">
+            <div class="section-header">
+                <i class="bi bi-activity"></i>
+                <span>ACTIVITÉ RÉSEAU</span>
+            </div>
+            <div class="network-activity">
+                <canvas id="activityGraph" width="280" height="120"></canvas>
+            </div>
+        </div>
+
+        <!-- CIBLES GLOBALES -->
+        <div class="intel-section">
+            <div class="section-header">
+                <i class="bi bi-globe"></i>
+                <span>CIBLES GLOBALES</span>
+            </div>
+            <div class="target-list">
+                <div class="target-item active">
+                    <span class="target-dot"></span>
+                    <span class="target-name">MOSCOW</span>
+                    <span class="target-status">ACTIF</span>
+                </div>
+                <div class="target-item">
+                    <span class="target-dot"></span>
+                    <span class="target-name">NEW DELHI</span>
+                    <span class="target-status">EN ATTENTE</span>
+                </div>
+                <div class="target-item">
+                    <span class="target-dot"></span>
+                    <span class="target-name">BEIJING</span>
+                    <span class="target-status">EN ATTENTE</span>
+                </div>
+                <div class="target-item">
+                    <span class="target-dot"></span>
+                    <span class="target-name">OSLO</span>
+                    <span class="target-status">EN ATTENTE</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- MODE MASTER PROFILE -->
     <div class="master-profile" id="masterProfile" style="display: none;">
-      <div class="profile-close" id="profileClose">
-        <i class="bi bi-x-lg"></i>
-      </div>
-      <div class="profile-header">
-        <div class="profile-avatar" id="profileAvatar"></div>
-        <div class="profile-info">
-          <h2 class="profile-name" id="profileName">GARRY KASPAROV</h2>
-          <p class="profile-title" id="profileTitle">World Champion</p>
-          <p class="profile-location" id="profileLocation">MOSCOW, RUSSIA</p>
+
+        <div class="profile-header">
+            <div class="profile-avatar" id="profileAvatar"></div>
+            <div class="profile-info">
+                <h2 class="profile-name" id="profileName">GARRY KASPAROV</h2>
+                <p class="profile-title" id="profileTitle">World Champion</p>
+                <p class="profile-location" id="profileLocation">MOSCOW, RUSSIA</p>
+            </div>
         </div>
-      </div>
-      <div class="profile-stats">
-        <div class="profile-stat">
-          <span class="stat-label">ELO RATING</span>
-          <span class="stat-number" id="profileElo">2851</span>
+
+        <div class="profile-stats">
+            <div class="profile-stat">
+                <span class="stat-label">ELO RATING</span>
+                <span class="stat-number" id="profileElo">2851</span>
+            </div>
+            <div class="profile-stat">
+                <span class="stat-label">PEAK YEAR</span>
+                <span class="stat-number" id="profileYear">1999</span>
+            </div>
+            <div class="profile-stat">
+                <span class="stat-label">TITLES</span>
+                <span class="stat-number" id="profileTitles">15</span>
+            </div>
         </div>
-        <div class="profile-stat">
-          <span class="stat-label">PEAK YEAR</span>
-          <span class="stat-number" id="profileYear">1999</span>
+
+        <div class="profile-radar">
+            <canvas id="radarChart" width="280" height="280"></canvas>
         </div>
-        <div class="profile-stat">
-          <span class="stat-label">TITLES</span>
-          <span class="stat-number" id="profileTitles">15</span>
-        </div>
-      </div>
-      <div class="profile-radar">
-        <canvas id="radarChart" width="280" height="280"></canvas>
-      </div>
+
     </div>
 
-    <div class="intel-section">
-      <div class="section-header">
-        <i class="bi bi-radar"></i>
-        <span>SCAN GLOBAL</span>
-      </div>
-      <div class="scan-display" id="scanDisplay">
-        <div class="scan-info">
-          <div class="scan-target" id="scanTarget">MOSCOW</div>
-          <div class="scan-coordinates" id="scanCoords">55.7558°N, 37.6173°E</div>
-        </div>
-      </div>
-    </div>
+</div>
 
-    <div class="intel-section">
-      <div class="section-header">
-        <i class="bi bi-bar-chart"></i>
-        <span>ANALYSE TACTIQUE</span>
-      </div>
-      <div class="tactical-data">
-        <div class="data-row">
-          <span class="data-label">Menaces détectées</span>
-          <span class="data-value threat">12</span>
-        </div>
-        <div class="data-row">
-          <span class="data-label">Opportunités</span>
-          <span class="data-value opportunity">8</span>
-        </div>
-        <div class="data-row">
-          <span class="data-label">Zones contrôlées</span>
-          <span class="data-value neutral">64%</span>
-        </div>
-        <div class="data-row">
-          <span class="data-label">Niveau défense</span>
-          <span class="data-value success">OPTIMAL</span>
-        </div>
-      </div>
-    </div>
 
-    <div class="intel-section">
-      <div class="section-header">
-        <i class="bi bi-activity"></i>
-        <span>ACTIVITÉ RÉSEAU</span>
-      </div>
-      <div class="network-activity">
-        <canvas id="activityGraph" width="280" height="120"></canvas>
-      </div>
-    </div>
-
-    <div class="intel-section">
-      <div class="section-header">
-        <i class="bi bi-globe"></i>
-        <span>CIBLES GLOBALES</span>
-      </div>
-      <div class="target-list">
-        <div class="target-item active">
-          <span class="target-dot"></span>
-          <span class="target-name">MOSCOW</span>
-          <span class="target-status">ACTIF</span>
-        </div>
-        <div class="target-item">
-          <span class="target-dot"></span>
-          <span class="target-name">NEW DELHI</span>
-          <span class="target-status">EN ATTENTE</span>
-        </div>
-        <div class="target-item">
-          <span class="target-dot"></span>
-          <span class="target-name">BEIJING</span>
-          <span class="target-status">EN ATTENTE</span>
-        </div>
-        <div class="target-item">
-          <span class="target-dot"></span>
-          <span class="target-name">OSLO</span>
-          <span class="target-status">EN ATTENTE</span>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <!-- Bottom Bar -->
   <div class="bottom-bar">

@@ -1024,3 +1024,27 @@ body {
     pointer-events: none;
     left: 0;
 }
+
+.top-switch-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+}
+
+.toggle-btn {
+    background: #00ffff33;
+    border: 1px solid #00ffff;
+    color: #00ffff;
+    padding: 10px 25px;
+    cursor: pointer;
+    border-radius: 6px;
+    font-family: 'Orbitron';
+    letter-spacing: 1px;
+    transition: 0.2s;
+}
+
+.toggle-btn:hover {
+    background: #00ffff55;
+}
+

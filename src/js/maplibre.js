@@ -183,8 +183,10 @@ function scanNextCity() {
 
     // AFFICHER LE PROFIL AUTOMATIQUEMENT
     setTimeout(() => {
+     {
         showMasterProfile(master);
-    }, 1500);
+    }
+}, 1500);
 
     setTimeout(() => {
         carte.flyTo({
@@ -504,3 +506,60 @@ setTimeout(() => {
     console.log('🎬 Affichage du premier grand maître...');
     showMasterProfile(chessMasters[0]);
 }, 2000);
+
+let viewMode = "master";
+
+const masterSection = document.getElementById("masterProfile");
+const globalSection = document.getElementById("globalContainer");
+const toggleBtn = document.getElementById("toggleView"); // Ton bouton SWITCH MODE
+
+// Sécurité : empêcher les erreurs si le bouton n'existe pas
+if (toggleBtn) {
+    toggleBtn.addEventListener("click", () => {
+
+        if (viewMode === "master") {
+            // PASSAGE EN MODE GLOBAL
+            viewMode = "global";
+
+            masterSection.style.display = "none";
+            globalSection.style.display = "flex";
+
+        } else {
+            // RETOUR EN MODE MASTER
+            viewMode = "master";
+
+            masterSection.style.display = "flex";
+            globalSection.style.display = "none";
+        }
+
+    });
+}
+
+const btn = document.getElementById("toggleView");
+const globalContainer = document.getElementById("globalContainer");
+const masterProfile = document.getElementById("masterProfile");
+
+let mode = "global"; // mode par défaut
+
+// Texte initial
+btn.textContent = "MASTER PROFILE";
+
+btn.addEventListener("click", () => {
+    if (mode === "global") {
+        // Aller vers MASTER PROFILE
+        globalContainer.style.display = "none";
+        masterProfile.style.display = "flex";
+        mode = "master";
+
+        // Met le texte du bouton pour retourner à global
+        btn.textContent = "GLOBAL VIEW";
+    } else {
+        // Retour vers GLOBAL VIEW
+        masterProfile.style.display = "none";
+        globalContainer.style.display = "flex";
+        mode = "global";
+
+        // Met le texte du bouton pour aller dans le master
+        btn.textContent = "MASTER PROFILE";
+    }
+});
