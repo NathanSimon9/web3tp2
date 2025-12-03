@@ -259,6 +259,38 @@
 
   <!-- Right Panel - Intelligence Data -->
   <div class="right-panel">
+    <!-- Master Profile (caché par défaut) -->
+    <div class="master-profile" id="masterProfile" style="display: none;">
+      <div class="profile-close" id="profileClose">
+        <i class="bi bi-x-lg"></i>
+      </div>
+      <div class="profile-header">
+        <div class="profile-avatar" id="profileAvatar"></div>
+        <div class="profile-info">
+          <h2 class="profile-name" id="profileName">GARRY KASPAROV</h2>
+          <p class="profile-title" id="profileTitle">World Champion</p>
+          <p class="profile-location" id="profileLocation">MOSCOW, RUSSIA</p>
+        </div>
+      </div>
+      <div class="profile-stats">
+        <div class="profile-stat">
+          <span class="stat-label">ELO RATING</span>
+          <span class="stat-number" id="profileElo">2851</span>
+        </div>
+        <div class="profile-stat">
+          <span class="stat-label">PEAK YEAR</span>
+          <span class="stat-number" id="profileYear">1999</span>
+        </div>
+        <div class="profile-stat">
+          <span class="stat-label">TITLES</span>
+          <span class="stat-number" id="profileTitles">15</span>
+        </div>
+      </div>
+      <div class="profile-radar">
+        <canvas id="radarChart" width="280" height="280"></canvas>
+      </div>
+    </div>
+
     <div class="intel-section">
       <div class="section-header">
         <i class="bi bi-radar"></i>
@@ -346,27 +378,5 @@
       </div>
     </div>
   </div>
-
-  <!-- chess master -->
-    <!-- Alexander-Alekhine -->
-    assets/img/Alexander-Alekhine.png
-    <!-- anatoly-karpov -->
-    assets/img/anatoly-karpov.png
-    <!-- Bobby-Fischer -->
-    assets/img/Bobby-Fischer.png
-    <!-- capablanca -->
-    assets/img/capablanca.png
-    <!-- emanuel_lasker -->
-    assets/img/emanuel_lasker.png
-    <!-- garry-kasparov -->
-    assets/img/garry-kasparov.png
-    <!-- magnus-carlsen -->
-    assets/img/magnus-carlsen.jpg
-    <!-- Mikhail-Botvinnik -->
-    assets/img/Mikhail-Botvinnik.png
-    <!-- Mikhail tal -->
-    assets/img/Mikhail.png
-    <!-- Vladimir-Kramnik -->
-    assets/img/Vladimir-Kramnik.png
 </body>
 </html>
