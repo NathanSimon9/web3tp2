@@ -1,97 +1,130 @@
-/**
- * NEXUS CHESS - MapLibre GL Integration
- * Carte 3D avec scanner de villes et profils des maîtres d'échecs
- */
+import maplibregl from 'https://esm.sh/maplibre-gl@5.13.0';
 
-import maplibregl from 'https://esm.sh/maplibre-gl@5.0.0';
-
-console.log('🗺️ NEXUS CHESS - Initialisation MapLibre...');
-
-// ==================== DONNÉES DES GRANDS MAÎTRES ====================
-const grandMasters = [
+// ==================== CHESS MASTERS DATA ====================
+const chessMasters = [
   { 
-    name: 'MOSCOW', 
+    name: 'GARRY KASPAROV', 
+    city: 'MOSCOW', 
     lng: 37.6173, 
     lat: 55.7558,
     image: 'assets/img/garry-kasparov.png',
-    master: 'GARRY KASPAROV',
-    title: 'World Champion 1985-2000',
-    country: 'RUSSIA',
+    title: 'World Champion',
     elo: 2851,
     year: 1999,
     titles: 15,
     skills: { opening: 98, middlegame: 99, endgame: 95, tactics: 100, strategy: 98, calculation: 99 }
   },
   { 
-    name: 'WASHINGTON DC', 
+    name: 'BOBBY FISCHER', 
+    city: 'WASHINGTON DC', 
     lng: -77.0369, 
     lat: 38.9072,
     image: 'assets/img/Bobby-Fischer.png',
-    master: 'BOBBY FISCHER',
-    title: 'Legendary Champion 1972-1975',
-    country: 'USA',
+    title: 'Legendary Champion',
     elo: 2785,
     year: 1972,
     titles: 12,
     skills: { opening: 95, middlegame: 98, endgame: 99, tactics: 100, strategy: 96, calculation: 98 }
   },
   { 
-    name: 'OSLO', 
+    name: 'MAGNUS CARLSEN', 
+    city: 'OSLO', 
     lng: 10.7522, 
     lat: 59.9139,
     image: 'assets/img/magnus-carlsen.jpg',
-    master: 'MAGNUS CARLSEN',
     title: 'Current World Champion',
-    country: 'NORWAY',
     elo: 2882,
-    year: 2024,
+    year: 2014,
     titles: 21,
     skills: { opening: 97, middlegame: 99, endgame: 100, tactics: 98, strategy: 99, calculation: 97 }
   },
   { 
-    name: 'PARIS', 
+    name: 'JOSÉ RAÚL CAPABLANCA', 
+    city: 'HAVANA', 
+    lng: -82.3666, 
+    lat: 23.1136,
+    image: 'assets/img/capablanca.png',
+    title: 'Chess Machine',
+    elo: 2725,
+    year: 1921,
+    titles: 8,
+    skills: { opening: 92, middlegame: 96, endgame: 100, tactics: 94, strategy: 97, calculation: 93 }
+  },
+  { 
+    name: 'ANATOLY KARPOV', 
+    city: 'MOSCOW', 
+    lng: 37.6173, 
+    lat: 55.7558,
+    image: 'assets/img/anatoly-karpov.png',
+    title: 'Positional Master',
+    elo: 2780,
+    year: 1994,
+    titles: 16,
+    skills: { opening: 96, middlegame: 97, endgame: 98, tactics: 95, strategy: 100, calculation: 96 }
+  },
+  { 
+    name: 'ALEXANDER ALEKHINE', 
+    city: 'PARIS', 
     lng: 2.3522, 
     lat: 48.8566,
     image: 'assets/img/Alexander-Alekhine.png',
-    master: 'ALEXANDER ALEKHINE',
-    title: 'Attacking Genius 1927-1946',
-    country: 'FRANCE',
+    title: 'Attacking Genius',
     elo: 2690,
     year: 1927,
     titles: 10,
     skills: { opening: 93, middlegame: 98, endgame: 94, tactics: 99, strategy: 95, calculation: 98 }
+  },
+  { 
+    name: 'MIKHAIL TAL', 
+    city: 'RIGA', 
+    lng: 24.1052, 
+    lat: 56.9496,
+    image: 'assets/img/Mikhail.png',
+    title: 'The Magician',
+    elo: 2705,
+    year: 1980,
+    titles: 11,
+    skills: { opening: 94, middlegame: 100, endgame: 88, tactics: 100, strategy: 92, calculation: 99 }
+  },
+  { 
+    name: 'VLADIMIR KRAMNIK', 
+    city: 'MOSCOW', 
+    lng: 37.6173, 
+    lat: 55.7558,
+    image: 'assets/img/Vladimir-Kramnik.png',
+    title: 'Solid Champion',
+    elo: 2817,
+    year: 2016,
+    titles: 14,
+    skills: { opening: 98, middlegame: 96, endgame: 98, tactics: 95, strategy: 99, calculation: 96 }
   }
 ];
 
-let currentCityIndex = 0;
-let map = null;
+let currentMasterIndex = 0;
 
-// ==================== INITIALISATION DE LA CARTE ====================
-function initMap() {
-  map = new maplibregl.Map({
-    container: 'carte',
-    style: 'https://tiles.stadiamaps.com/styles/alidade_smooth_dark.json',
-    center: [grandMasters[0].lng, grandMasters[0].lat],
-    zoom: 15,
-    pitch: 60,
-    bearing: -20,
-    antialias: true,
-    attributionControl: false
-  });
+// ==================== PRELOAD IMAGES ====================
+console.log('🖼️ Préchargement des images des grands maîtres...');
+chessMasters.forEach(master => {
+  const img = new Image();
+  img.onload = () => console.log('✅ Image chargée:', master.name);
+  img.onerror = () => console.warn('⚠️ Image non trouvée:', master.image);
+  img.src = master.image;
+});
 
-  console.log('✅ Carte MapLibre créée');
+// ==================== CREATE MAP ====================
+const carte = new maplibregl.Map({
+  container: 'carte',
+  style: 'https://tiles.stadiamaps.com/styles/alidade_smooth_dark.json',
+  center: [37.6173, 55.7558],
+  zoom: 16,
+  pitch: 75,
+  bearing: 0,
+  antialias: true
+});
 
-  map.on('load', () => {
-    console.log('📦 Carte chargée, ajout des bâtiments 3D...');
-    add3DBuildings();
-    setupMarkers();
-    startCityScanner();
-  });
-}
-
-// ==================== BÂTIMENTS 3D ====================
-function add3DBuildings() {
-  const layers = map.getStyle().layers;
+// ==================== ADD 3D BUILDINGS ====================
+carte.on('load', () => {
+  const layers = carte.getStyle().layers;
   let labelLayerId;
   
   for (const layer of layers) {
@@ -101,8 +134,7 @@ function add3DBuildings() {
     }
   }
 
-  // Ajouter les bâtiments avec un dégradé de couleur cyan
-  map.addLayer({
+  carte.addLayer({
     id: '3d-buildings',
     source: 'openmaptiles',
     'source-layer': 'building',
@@ -114,168 +146,171 @@ function add3DBuildings() {
         'interpolate',
         ['linear'],
         ['get', 'render_height'],
-        0, '#003344',
-        30, '#005566',
-        60, '#007788',
-        100, '#00aacc',
-        150, '#00f0ff'
+        0, '#0080ff',
+        50, '#00aaff',
+        100, '#00ffff'
       ],
       'fill-extrusion-height': ['get', 'render_height'],
       'fill-extrusion-base': ['get', 'render_min_height'],
-      'fill-extrusion-opacity': 0.85
+      'fill-extrusion-opacity': 0.8
     }
   }, labelLayerId);
 
   console.log('✅ Bâtiments 3D ajoutés');
-}
+  startCityScan();
+});
 
-// ==================== MARKERS ====================
-let scannerMarker = null;
-let redEyeMarker = null;
+// ==================== SCANNER MARKER ====================
+const scannerDiv = document.createElement('div');
+scannerDiv.className = 'scanner-dot';
+scannerDiv.innerHTML = '<div class="pulse1"></div><div class="pulse2"></div>';
+scannerDiv.style.cursor = 'pointer';
 
-function setupMarkers() {
-  // Scanner Cyan
-  const scannerDiv = document.createElement('div');
-  scannerDiv.className = 'scanner-dot';
-  scannerDiv.innerHTML = `
-    <div class="scanner-pulse"></div>
-    <div class="scanner-pulse delayed"></div>
-    <div class="scanner-core"></div>
-  `;
-  
-  scannerMarker = new maplibregl.Marker({ element: scannerDiv })
-    .setLngLat([grandMasters[0].lng, grandMasters[0].lat])
-    .addTo(map);
+const scannerMarker = new maplibregl.Marker({ element: scannerDiv })
+  .setLngLat([37.6173, 55.7558])
+  .addTo(carte);
 
-  scannerDiv.addEventListener('click', () => {
-    showMasterProfile(grandMasters[currentCityIndex]);
-  });
-
-  // Œil Rouge
-  const redEyeDiv = document.createElement('div');
-  redEyeDiv.className = 'red-eye-scanner';
-  redEyeDiv.innerHTML = `
-    <div class="eye-outer"></div>
+// ==================== ŒIL ROUGE SCANNER ====================
+const redEyeDiv = document.createElement('div');
+redEyeDiv.className = 'red-eye-scanner';
+redEyeDiv.innerHTML = `
+  <div class="eye-outer">
     <div class="eye-middle">
       <div class="eye-inner">
         <div class="eye-pupil"></div>
       </div>
     </div>
-    <div class="eye-beam"></div>
-  `;
-  
-  redEyeMarker = new maplibregl.Marker({ 
-    element: redEyeDiv,
-    anchor: 'center'
-  })
-    .setLngLat([grandMasters[0].lng, grandMasters[0].lat])
-    .addTo(map);
+  </div>
+  <div class="eye-beam"></div>
+`;
 
-  // Animation de la pupille
-  let eyeAngle = 0;
-  setInterval(() => {
-    eyeAngle += 0.08;
-    const pupil = redEyeDiv.querySelector('.eye-pupil');
-    if (pupil) {
-      const moveX = Math.cos(eyeAngle) * 4;
-      const moveY = Math.sin(eyeAngle * 0.7) * 4;
-      pupil.style.transform = `translate(calc(-50% + ${moveX}px), calc(-50% + ${moveY}px))`;
-    }
-  }, 50);
+const redEyeMarker = new maplibregl.Marker({ 
+  element: redEyeDiv,
+  anchor: 'center'
+})
+  .setLngLat([37.6173, 55.7558])
+  .addTo(carte);
 
-  console.log('✅ Markers créés');
-}
+// Animation de l'œil qui regarde autour
+let eyeAngle = 0;
+setInterval(() => {
+  eyeAngle += 0.05;
+  const pupil = redEyeDiv.querySelector('.eye-pupil');
+  const beam = redEyeDiv.querySelector('.eye-beam');
+  if (pupil && beam) {
+    const moveX = Math.cos(eyeAngle) * 3;
+    const moveY = Math.sin(eyeAngle) * 3;
+    pupil.style.transform = `translate(${moveX}px, ${moveY}px)`;
+    beam.style.transform = `rotate(${eyeAngle * 50}deg)`;
+  }
+}, 50);
 
-// ==================== SCANNER DE VILLES ====================
-function startCityScanner() {
-  console.log('🎬 Démarrage du scanner automatique');
+// Click on scanner
+scannerDiv.addEventListener('click', (e) => {
+  e.stopPropagation();
+  console.log('🖱️ Click sur scanner - Affichage du profil');
+  showMasterProfile(chessMasters[currentMasterIndex]);
+});
+
+// ==================== SCAN LINE ====================
+const scanLine = document.createElement('div');
+scanLine.className = 'scan-line';
+document.body.appendChild(scanLine);
+
+// ==================== CITY SCANNING ====================
+function startCityScan() {
   scanNextCity();
-  setInterval(scanNextCity, 8000);
+  setInterval(scanNextCity, 6000);
 }
 
 function scanNextCity() {
-  const city = grandMasters[currentCityIndex];
-  console.log('🔍 Scan de:', city.name);
+  const master = chessMasters[currentMasterIndex];
+  console.log('📍 Scan de:', master.city, '-', master.name);
 
-  // Activer la ligne de scan
-  const scanLine = document.querySelector('.scan-line');
-  if (scanLine) {
-    scanLine.classList.add('active');
-    setTimeout(() => scanLine.classList.remove('active'), 2000);
-  }
+  updateScanDisplay(master);
+  updateTargetList(currentMasterIndex);
 
-  // Mettre à jour l'affichage
-  updateScanDisplay(city);
-  updateTargetList(currentCityIndex);
-
-  // Vol vers la ville
+  // Auto-show profile after scan
   setTimeout(() => {
-    map.flyTo({
-      center: [city.lng, city.lat],
-      zoom: 15 + Math.random() * 2,
-      pitch: 55 + Math.random() * 20,
+    showMasterProfile(master);
+  }, 1500);
+
+  // Fly to city
+  setTimeout(() => {
+    carte.flyTo({
+      center: [master.lng, master.lat],
+      zoom: 16,
+      pitch: 70,
       bearing: Math.random() * 360,
-      duration: 3000,
+      duration: 2500,
       essential: true
     });
-  }, 200);
+  }, 100);
 
-  // Déplacer les markers
-  if (scannerMarker) scannerMarker.setLngLat([city.lng, city.lat]);
-  if (redEyeMarker) redEyeMarker.setLngLat([city.lng, city.lat]);
+  // Move scanner marker
+  scannerMarker.setLngLat([master.lng, master.lat]);
+  
+  // Move red eye marker
+  redEyeMarker.setLngLat([master.lng, master.lat]);
 
-  // Afficher le profil après le scan
+  // Scan line animation
   setTimeout(() => {
-    showMasterProfile(city);
-  }, 2500);
+    const point = carte.project([master.lng, master.lat]);
+    scanLine.style.top = `${point.y}px`;
+    scanLine.style.transition = 'top 0.8s ease';
+    
+    setTimeout(() => {
+      scanLine.style.top = '0px';
+    }, 100);
+    
+    setTimeout(() => {
+      scanLine.style.top = '100vh';
+    }, 1000);
+  }, 1500);
 
-  // Ville suivante
-  currentCityIndex = (currentCityIndex + 1) % grandMasters.length;
+  currentMasterIndex = (currentMasterIndex + 1) % chessMasters.length;
 }
 
-// ==================== MISE À JOUR DE L'AFFICHAGE ====================
-function updateScanDisplay(city) {
+// ==================== UPDATE SCAN DISPLAY ====================
+function updateScanDisplay(master) {
   const scanTarget = document.getElementById('scanTarget');
   const scanCoords = document.getElementById('scanCoords');
   
   if (scanTarget) {
     scanTarget.style.opacity = '0';
-    scanTarget.style.transform = 'translateY(-10px)';
     setTimeout(() => {
-      scanTarget.textContent = city.name;
+      scanTarget.textContent = master.city;
       scanTarget.style.opacity = '1';
-      scanTarget.style.transform = 'translateY(0)';
     }, 300);
   }
   
   if (scanCoords) {
     scanCoords.style.opacity = '0';
     setTimeout(() => {
-      const lat = Math.abs(city.lat).toFixed(4);
-      const lng = Math.abs(city.lng).toFixed(4);
-      const latDir = city.lat >= 0 ? 'N' : 'S';
-      const lngDir = city.lng >= 0 ? 'E' : 'W';
+      const lat = Math.abs(master.lat).toFixed(4);
+      const lng = Math.abs(master.lng).toFixed(4);
+      const latDir = master.lat >= 0 ? 'N' : 'S';
+      const lngDir = master.lng >= 0 ? 'E' : 'W';
       scanCoords.textContent = `${lat}°${latDir}, ${lng}°${lngDir}`;
       scanCoords.style.opacity = '1';
     }, 500);
   }
 }
 
+// ==================== UPDATE TARGET LIST ====================
 function updateTargetList(activeIndex) {
   const targetItems = document.querySelectorAll('.target-item');
   
   targetItems.forEach((item, index) => {
     item.classList.remove('active');
     
-    const cityIndex = (activeIndex + index) % grandMasters.length;
-    const city = grandMasters[cityIndex];
+    const masterIndex = (activeIndex + index) % chessMasters.length;
+    const master = chessMasters[masterIndex];
     
     const nameElement = item.querySelector('.target-name');
-    const masterElement = item.querySelector('.target-master');
     const statusElement = item.querySelector('.target-status');
     
-    if (nameElement) nameElement.textContent = city.name;
-    if (masterElement) masterElement.textContent = city.master;
+    if (nameElement) nameElement.textContent = master.city;
     
     if (statusElement) {
       if (index === 0) {
@@ -286,113 +321,64 @@ function updateTargetList(activeIndex) {
       }
     }
     
-    // Click handler
+    // Make clickable
+    item.style.cursor = 'pointer';
     item.onclick = () => {
-      currentCityIndex = cityIndex;
-      showMasterProfile(city);
-      
-      map.flyTo({
-        center: [city.lng, city.lat],
-        zoom: 16,
-        pitch: 65,
-        bearing: Math.random() * 360,
-        duration: 2000
-      });
-      
-      if (scannerMarker) scannerMarker.setLngLat([city.lng, city.lat]);
-      if (redEyeMarker) redEyeMarker.setLngLat([city.lng, city.lat]);
-      
-      updateTargetList(cityIndex);
+      console.log('🖱️ Click sur ville:', master.city);
+      showMasterProfile(master);
     };
   });
 }
 
-// ==================== AFFICHAGE DU PROFIL ====================
-window.showMasterProfile = function(city) {
-  console.log('👤 Affichage du profil:', city.master);
+// ==================== SHOW MASTER PROFILE ====================
+window.showMasterProfile = function(master) {
+  console.log('👤 Affichage du profil de:', master.name);
   
   const masterProfile = document.getElementById('masterProfile');
   const globalContainer = document.getElementById('globalContainer');
   const toggleBtn = document.getElementById('toggleView');
   
-  if (!masterProfile || !globalContainer || !toggleBtn) {
-    console.error('❌ Éléments du profil non trouvés');
+  if (!masterProfile) {
+    console.error('❌ Element masterProfile non trouvé!');
     return;
   }
   
-  // Switcher vers le profil
+  // Switch to master profile view
   globalContainer.style.display = 'none';
   masterProfile.style.display = 'flex';
-  toggleBtn.innerHTML = '<span class="btn-icon"><i class="bi bi-globe"></i></span><span class="btn-text">VUE GLOBALE</span>';
+  toggleBtn.textContent = 'GLOBAL VIEW';
   
-  // Remplir les données avec animation
+  // Update profile data
+  const avatar = document.getElementById('profileAvatar');
+  const name = document.getElementById('profileName');
+  const title = document.getElementById('profileTitle');
+  const location = document.getElementById('profileLocation');
+  const elo = document.getElementById('profileElo');
+  const year = document.getElementById('profileYear');
+  const titles = document.getElementById('profileTitles');
+  
+  if (avatar) {
+    avatar.style.backgroundImage = `url('${master.image}')`;
+  }
+  
+  if (name) name.textContent = master.name;
+  if (title) title.textContent = master.title;
+  if (location) location.textContent = `${master.city}, ${master.city === 'WASHINGTON DC' ? 'USA' : master.city === 'HAVANA' ? 'CUBA' : master.city === 'PARIS' ? 'FRANCE' : master.city === 'RIGA' ? 'LATVIA' : master.city === 'OSLO' ? 'NORWAY' : 'RUSSIA'}`;
+  if (elo) elo.textContent = master.elo;
+  if (year) year.textContent = master.year;
+  if (titles) titles.textContent = master.titles;
+  
+  // Create radar chart
   setTimeout(() => {
-    const avatar = document.getElementById('profileAvatar');
-    const name = document.getElementById('profileName');
-    const title = document.getElementById('profileTitle');
-    const location = document.getElementById('profileLocation');
-    const elo = document.getElementById('profileElo');
-    const year = document.getElementById('profileYear');
-    const titles = document.getElementById('profileTitles');
-    
-    if (avatar) avatar.style.backgroundImage = `url('${city.image}')`;
-    if (name) name.textContent = city.master;
-    if (title) title.textContent = city.title;
-    if (location) location.textContent = `${city.name}, ${city.country}`;
-    if (elo) animateNumber(elo, city.elo);
-    if (year) animateNumber(year, city.year);
-    if (titles) animateNumber(titles, city.titles);
-    
-    // Créer le radar chart
-    setTimeout(() => createRadarChart(city.skills), 300);
-  }, 100);
+    createRadarChart(master.skills);
+  }, 200);
+  
+  console.log('✅ Profil affiché avec succès');
 };
 
-// Animation des nombres
-function animateNumber(element, target) {
-  const duration = 1000;
-  const start = 0;
-  const startTime = performance.now();
-  
-  function update(currentTime) {
-    const elapsed = currentTime - startTime;
-    const progress = Math.min(elapsed / duration, 1);
-    const eased = 1 - Math.pow(1 - progress, 3);
-    
-    element.textContent = Math.floor(start + (target - start) * eased);
-    
-    if (progress < 1) {
-      requestAnimationFrame(update);
-    }
-  }
-  
-  requestAnimationFrame(update);
-}
-
-// ==================== TOGGLE VIEW ====================
-document.addEventListener('DOMContentLoaded', () => {
-  const toggleBtn = document.getElementById('toggleView');
-  const masterProfile = document.getElementById('masterProfile');
-  const globalContainer = document.getElementById('globalContainer');
-  
-  if (toggleBtn) {
-    toggleBtn.addEventListener('click', () => {
-      const isProfileVisible = masterProfile.style.display !== 'none';
-      
-      if (isProfileVisible) {
-        masterProfile.style.display = 'none';
-        globalContainer.style.display = 'flex';
-        toggleBtn.innerHTML = '<span class="btn-icon"><i class="bi bi-person-badge"></i></span><span class="btn-text">PROFIL MAÎTRE</span>';
-      } else {
-        showMasterProfile(grandMasters[currentCityIndex]);
-      }
-    });
-  }
-});
-
-// ==================== GRAPHIQUE RADAR ====================
+// ==================== RADAR CHART ====================
 let previousMapped = null;
-let animFrame = null;
+let animationFrame = null;
 
 function createRadarChart(skills) {
   const canvas = document.getElementById('radarChart');
@@ -406,34 +392,35 @@ function createRadarChart(skills) {
   const height = canvas.height;
   const centerX = width / 2;
   const centerY = height / 2;
-  const radius = (Math.min(width, height) / 2) * 0.55;
+  const radius = (Math.min(width, height) / 2) * 0.5;
 
   const categories = ['Opening', 'Middlegame', 'Endgame', 'Tactics', 'Strategy', 'Calculation'];
   const raw = [skills.opening, skills.middlegame, skills.endgame, skills.tactics, skills.strategy, skills.calculation];
 
-  const mapValue = v => v < 80 ? 0 : ((v - 80) / 20) * radius;
+  // Map 85-100 to 0-radius
+  const mapValue = v => v < 85 ? 0 : ((v - 85) / 15) * radius;
   const newMapped = raw.map(mapValue);
 
-  if (!previousMapped) previousMapped = new Array(6).fill(0);
-  if (animFrame) cancelAnimationFrame(animFrame);
+  if (!previousMapped) previousMapped = [...newMapped];
 
-  const duration = 800;
+  if (animationFrame) cancelAnimationFrame(animationFrame);
+
+  const duration = 700;
   const startTime = performance.now();
-  const startMapped = [...previousMapped];
 
   function animate() {
     const now = performance.now();
     const t = Math.min((now - startTime) / duration, 1);
-    const eased = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    const eased = t * t * (3 - 2 * t);
 
-    const current = startMapped.map((oldVal, i) => 
+    const current = previousMapped.map((oldVal, i) => 
       oldVal + (newMapped[i] - oldVal) * eased
     );
 
     drawRadar(ctx, centerX, centerY, radius, categories, raw, current);
 
     if (t < 1) {
-      animFrame = requestAnimationFrame(animate);
+      animationFrame = requestAnimationFrame(animate);
     } else {
       previousMapped = [...newMapped];
     }
@@ -448,29 +435,28 @@ function drawRadar(ctx, centerX, centerY, radius, categories, rawValues, mappedV
 
   ctx.clearRect(0, 0, width, height);
 
-  // Fond sombre
-  ctx.fillStyle = 'rgba(3, 8, 16, 0.6)';
+  // Background
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
   ctx.fillRect(0, 0, width, height);
 
-  // Grille hexagonale
-  ctx.strokeStyle = 'rgba(0, 240, 255, 0.15)';
+  // Grid circles
+  ctx.strokeStyle = 'rgba(0, 255, 255, 0.2)';
   ctx.lineWidth = 1;
 
-  for (let level = 1; level <= 5; level++) {
-    const r = (radius / 5) * level;
+  for (let i = 1; i <= 5; i++) {
+    const r = (radius / 5) * i;
     ctx.beginPath();
-    for (let i = 0; i <= 6; i++) {
-      const angle = (Math.PI * 2 * i) / 6 - Math.PI / 2;
+    for (let j = 0; j <= 6; j++) {
+      const angle = (Math.PI * 2 * j) / 6 - Math.PI / 2;
       const x = centerX + Math.cos(angle) * r;
       const y = centerY + Math.sin(angle) * r;
-      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      j === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
     }
     ctx.closePath();
     ctx.stroke();
   }
 
-  // Lignes radiales
-  ctx.strokeStyle = 'rgba(0, 240, 255, 0.1)';
+  // Radial lines
   for (let i = 0; i < 6; i++) {
     const angle = (Math.PI * 2 * i) / 6 - Math.PI / 2;
     ctx.beginPath();
@@ -479,7 +465,7 @@ function drawRadar(ctx, centerX, centerY, radius, categories, rawValues, mappedV
     ctx.stroke();
   }
 
-  // Zone de données
+  // Data area
   ctx.beginPath();
   for (let i = 0; i < 6; i++) {
     const angle = (Math.PI * 2 * i) / 6 - Math.PI / 2;
@@ -490,80 +476,71 @@ function drawRadar(ctx, centerX, centerY, radius, categories, rawValues, mappedV
   }
   ctx.closePath();
 
-  // Gradient de remplissage
   const gradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, radius);
-  gradient.addColorStop(0, 'rgba(0, 240, 255, 0.5)');
-  gradient.addColorStop(0.5, 'rgba(0, 240, 255, 0.2)');
-  gradient.addColorStop(1, 'rgba(0, 240, 255, 0.05)');
+  gradient.addColorStop(0, 'rgba(0,255,255,0.5)');
+  gradient.addColorStop(1, 'rgba(0,255,255,0.1)');
   ctx.fillStyle = gradient;
   ctx.fill();
 
-  // Contour
-  ctx.strokeStyle = '#00f0ff';
+  ctx.strokeStyle = '#00ffff';
   ctx.lineWidth = 3;
-  ctx.shadowBlur = 20;
-  ctx.shadowColor = '#00f0ff';
+  ctx.shadowBlur = 15;
+  ctx.shadowColor = '#00ffff';
   ctx.stroke();
   ctx.shadowBlur = 0;
 
-  // Points de données
+  // Data points
   for (let i = 0; i < 6; i++) {
     const angle = (Math.PI * 2 * i) / 6 - Math.PI / 2;
     const v = mappedValues[i];
     const x = centerX + Math.cos(angle) * v;
     const y = centerY + Math.sin(angle) * v;
 
-    // Cercle externe
     ctx.beginPath();
-    ctx.arc(x, y, 8, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(0, 240, 255, 0.3)';
-    ctx.fill();
-
-    // Point central
-    ctx.beginPath();
-    ctx.arc(x, y, 5, 0, Math.PI * 2);
-    ctx.fillStyle = '#00f0ff';
-    ctx.shadowBlur = 15;
-    ctx.shadowColor = '#00f0ff';
+    ctx.arc(x, y, 6, 0, Math.PI * 2);
+    ctx.fillStyle = '#00ffff';
+    ctx.shadowBlur = 10;
+    ctx.shadowColor = '#00ffff';
     ctx.fill();
     ctx.shadowBlur = 0;
 
-    // Point blanc central
     ctx.beginPath();
-    ctx.arc(x, y, 2, 0, Math.PI * 2);
+    ctx.arc(x, y, 3, 0, Math.PI * 2);
     ctx.fillStyle = '#ffffff';
     ctx.fill();
   }
 
   // Labels
-  ctx.font = 'bold 10px Rajdhani, sans-serif';
+  ctx.font = 'bold 10px Rajdhani';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
 
   for (let i = 0; i < 6; i++) {
     const angle = (Math.PI * 2 * i) / 6 - Math.PI / 2;
-    const labelRadius = radius + 35;
+    const labelRadius = radius + 40;
     const x = centerX + Math.cos(angle) * labelRadius;
     const y = centerY + Math.sin(angle) * labelRadius;
 
-    // Nom de la catégorie
-    ctx.fillStyle = 'rgba(0, 240, 255, 0.8)';
-    ctx.fillText(categories[i].toUpperCase(), x, y - 8);
+    ctx.fillStyle = '#00ffff';
+    ctx.shadowBlur = 5;
+    ctx.shadowColor = '#00ffff';
+    ctx.fillText(categories[i], x, y - 10);
 
-    // Valeur
-    ctx.font = 'bold 14px Orbitron, sans-serif';
+    ctx.font = 'bold 14px Orbitron';
     ctx.fillStyle = '#ffffff';
-    ctx.shadowBlur = 10;
-    ctx.shadowColor = '#00f0ff';
-    ctx.fillText(rawValues[i].toString(), x, y + 10);
-    ctx.shadowBlur = 0;
-    ctx.font = 'bold 10px Rajdhani, sans-serif';
+    ctx.fillText(rawValues[i], x, y + 8);
+    ctx.font = 'bold 10px Rajdhani';
   }
+
+  ctx.shadowBlur = 0;
 }
 
-// ==================== INITIALISATION ====================
-document.addEventListener('DOMContentLoaded', () => {
-  setTimeout(initMap, 100);
-});
+// ==================== INITIALIZATION ====================
+console.log('🗺️ MapLibre initialisé avec', chessMasters.length, 'grands maîtres');
+console.log('🎯 Scanner automatique activé');
 
-console.log('✅ MapLibre module chargé');
+// Show first master profile after delay
+setTimeout(() => {
+  console.log('🎬 Affichage du premier grand maître...');
+  showMasterProfile(chessMasters[0]);
+}, 2000);

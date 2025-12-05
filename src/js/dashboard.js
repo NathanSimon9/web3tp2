@@ -1,427 +1,349 @@
-/**
- * NEXUS CHESS - Dashboard Controller
- * Gère les animations, timers, et interactions du dashboard
- */
+console.log('⚡ Initialisation du dashboard...');
 
-console.log('🚀 NEXUS CHESS - Initialisation du Dashboard...');
-
-// ==================== MISSION TIMER ====================
+// ==================== TIMER MISSION ====================
 let missionTime = 0;
 
-function updateMissionTimer() {
+function updateTimer() {
   missionTime++;
-  const hours = Math.floor(missionTime / 3600).toString().padStart(2, '0');
-  const minutes = Math.floor((missionTime % 3600) / 60).toString().padStart(2, '0');
-  const seconds = (missionTime % 60).toString().padStart(2, '0');
+  const h = Math.floor(missionTime / 3600).toString().padStart(2, '0');
+  const m = Math.floor((missionTime % 3600) / 60).toString().padStart(2, '0');
+  const s = (missionTime % 60).toString().padStart(2, '0');
   
-  const timerElement = document.getElementById('missionTimer');
-  if (timerElement) {
-    timerElement.textContent = `${hours}:${minutes}:${seconds}`;
+  const timer = document.getElementById('missionTimer');
+  if (timer) {
+    timer.textContent = `${h}:${m}:${s}`;
   }
 }
 
-setInterval(updateMissionTimer, 1000);
+setInterval(updateTimer, 1000);
+console.log('✅ Timer activé');
 
-// ==================== DATE SYSTÈME ====================
-function updateSystemDate() {
-  const dateElement = document.getElementById('systemDate');
-  if (dateElement) {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = (now.getMonth() + 1).toString().padStart(2, '0');
-    const day = now.getDate().toString().padStart(2, '0');
-    dateElement.textContent = `${year}.${month}.${day}`;
+// ==================== CPU USAGE ====================
+function updateCPU() {
+  const cpu = document.getElementById('cpuUsage');
+  if (cpu) {
+    const value = Math.floor(40 + Math.random() * 20);
+    cpu.textContent = value + '%';
   }
 }
 
-updateSystemDate();
+setInterval(updateCPU, 3000);
 
-// ==================== CPU USAGE ANIMATION ====================
-let cpuBase = 45;
-let cpuTarget = 45;
-
-function animateCPU() {
-  const cpuElement = document.getElementById('cpuUsage');
-  if (cpuElement) {
-    // Smooth transition vers la cible
-    cpuBase += (cpuTarget - cpuBase) * 0.1;
-    const displayed = Math.round(cpuBase);
-    cpuElement.textContent = displayed + '%';
-    
-    // Changer la cible périodiquement
-    if (Math.random() < 0.1) {
-      cpuTarget = Math.floor(35 + Math.random() * 30);
-    }
+// ==================== TARGETS ====================
+function updateTargets() {
+  const targets = document.getElementById('activeTargets');
+  if (targets) {
+    const value = Math.floor(12 + Math.random() * 6);
+    targets.textContent = value;
   }
 }
 
-setInterval(animateCPU, 100);
+setInterval(updateTargets, 5000);
 
-// ==================== ACTIVE TARGETS COUNTER ====================
-function animateTargets() {
-  const targetsElement = document.getElementById('activeTargets');
-  if (targetsElement) {
-    const targets = Math.floor(12 + Math.random() * 8);
-    targetsElement.textContent = targets;
-  }
-}
-
-setInterval(animateTargets, 5000);
-
-// ==================== NOTIFICATION SYSTEM ====================
+// ==================== NOTIFICATIONS ====================
 const notifications = [
-  { icon: 'bi-broadcast', text: 'Système initialisé • Tous les modules opérationnels' },
-  { icon: 'bi-exclamation-triangle', text: 'Nouvelle menace détectée • Secteur Alpha-7' },
-  { icon: 'bi-graph-up', text: 'Analyse tactique mise à jour • Niveau de confiance: 94%' },
-  { icon: 'bi-search', text: 'Scan global complété • 15 cibles identifiées' },
-  { icon: 'bi-wifi', text: 'Connexion établie avec satellite de surveillance' },
-  { icon: 'bi-cpu', text: 'Mise à jour de l\'intelligence artificielle en cours' },
-  { icon: 'bi-lightning-charge', text: 'Optimisation du réseau neural • Performance +12%' },
-  { icon: 'bi-shield-check', text: 'Protocoles de sécurité vérifiés • Aucune intrusion' },
-  { icon: 'bi-geo-alt', text: 'Nouvelle position de grand maître localisée' },
-  { icon: 'bi-trophy', text: 'Base de données ELO mise à jour • 2,847 profils' }
+  'Système initialisé • Tous les modules opérationnels',
+  'Nouvelle menace détectée • Secteur Alpha-7',
+  'Analyse tactique mise à jour • Confiance: 94%',
+  'Scan global complété • 15 cibles identifiées',
+  'Connexion satellite établie',
+  'Mise à jour IA en cours',
+  'Optimisation réseau neural • +12%',
+  'Calibration capteurs terminée',
+  'Détection schémas tactiques avancés'
 ];
 
-let currentNotification = 0;
+let notifIndex = 0;
 
 function updateNotification() {
-  const notificationElement = document.getElementById('notification');
-  if (notificationElement) {
-    const iconElement = notificationElement.querySelector('i');
-    const textElement = notificationElement.querySelector('span');
+  const notif = document.querySelector('#notification span');
+  if (notif) {
+    notif.style.opacity = '0';
     
-    if (iconElement && textElement) {
-      // Fade out
-      notificationElement.style.opacity = '0';
-      notificationElement.style.transform = 'translateY(10px)';
-      
-      setTimeout(() => {
-        currentNotification = (currentNotification + 1) % notifications.length;
-        const notif = notifications[currentNotification];
-        
-        iconElement.className = `bi ${notif.icon}`;
-        textElement.textContent = notif.text;
-        
-        // Fade in
-        notificationElement.style.opacity = '1';
-        notificationElement.style.transform = 'translateY(0)';
-      }, 300);
-    }
+    setTimeout(() => {
+      notifIndex = (notifIndex + 1) % notifications.length;
+      notif.textContent = notifications[notifIndex];
+      notif.style.opacity = '1';
+    }, 300);
   }
 }
 
-setInterval(updateNotification, 6000);
+setInterval(updateNotification, 8000);
 
-// ==================== ACTIVITY GRAPH ====================
+// ==================== GRAPHIQUE ACTIVITÉ ====================
 window.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('activityGraph');
   if (!canvas) return;
   
+  console.log('📊 Création du graphique d\'activité...');
+  
   const ctx = canvas.getContext('2d');
-  const dataPoints = 50;
-  let activityData = Array(dataPoints).fill(0).map(() => Math.random() * 70 + 30);
+  const points = 40;
+  let data = Array(points).fill(0).map(() => Math.random() * 80 + 20);
   
   function drawGraph() {
-    const width = canvas.width;
-    const height = canvas.height;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     
-    // Clear
-    ctx.clearRect(0, 0, width, height);
-    
-    // Fond avec gradient
-    const bgGradient = ctx.createLinearGradient(0, 0, 0, height);
-    bgGradient.addColorStop(0, 'rgba(0, 240, 255, 0.05)');
-    bgGradient.addColorStop(1, 'rgba(0, 240, 255, 0)');
-    ctx.fillStyle = bgGradient;
-    ctx.fillRect(0, 0, width, height);
-    
-    // Grille horizontale
-    ctx.strokeStyle = 'rgba(0, 240, 255, 0.1)';
+    // Grille
+    ctx.strokeStyle = 'rgba(0, 255, 255, 0.1)';
     ctx.lineWidth = 1;
     
     for (let i = 0; i <= 4; i++) {
-      const y = (height / 4) * i;
+      const y = (canvas.height / 4) * i;
       ctx.beginPath();
       ctx.moveTo(0, y);
-      ctx.lineTo(width, y);
+      ctx.lineTo(canvas.width, y);
       ctx.stroke();
     }
     
-    // Données
-    const pointSpacing = width / (dataPoints - 1);
+    // Zone
+    const spacing = canvas.width / (points - 1);
+    const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+    gradient.addColorStop(0, 'rgba(0, 255, 255, 0.4)');
+    gradient.addColorStop(1, 'rgba(0, 255, 255, 0)');
     
-    // Zone de remplissage
     ctx.beginPath();
-    ctx.moveTo(0, height);
+    ctx.moveTo(0, canvas.height);
     
-    activityData.forEach((value, index) => {
-      const x = index * pointSpacing;
-      const y = height - (value / 100) * height;
+    data.forEach((val, i) => {
+      const x = i * spacing;
+      const y = canvas.height - (val / 100) * canvas.height;
       ctx.lineTo(x, y);
     });
     
-    ctx.lineTo(width, height);
+    ctx.lineTo(canvas.width, canvas.height);
     ctx.closePath();
-    
-    const gradient = ctx.createLinearGradient(0, 0, 0, height);
-    gradient.addColorStop(0, 'rgba(0, 240, 255, 0.4)');
-    gradient.addColorStop(0.5, 'rgba(0, 240, 255, 0.1)');
-    gradient.addColorStop(1, 'rgba(0, 240, 255, 0)');
     ctx.fillStyle = gradient;
     ctx.fill();
     
-    // Ligne principale
+    // Ligne
     ctx.beginPath();
-    activityData.forEach((value, index) => {
-      const x = index * pointSpacing;
-      const y = height - (value / 100) * height;
+    data.forEach((val, i) => {
+      const x = i * spacing;
+      const y = canvas.height - (val / 100) * canvas.height;
       
-      if (index === 0) {
+      if (i === 0) {
         ctx.moveTo(x, y);
       } else {
         ctx.lineTo(x, y);
       }
     });
     
-    ctx.strokeStyle = '#00f0ff';
+    ctx.strokeStyle = '#00ffff';
     ctx.lineWidth = 2;
-    ctx.shadowBlur = 15;
-    ctx.shadowColor = '#00f0ff';
+    ctx.shadowBlur = 10;
+    ctx.shadowColor = '#00ffff';
     ctx.stroke();
     ctx.shadowBlur = 0;
     
-    // Points sur la ligne
-    activityData.forEach((value, index) => {
-      if (index % 5 === 0) {
-        const x = index * pointSpacing;
-        const y = height - (value / 100) * height;
-        
-        ctx.beginPath();
-        ctx.arc(x, y, 3, 0, Math.PI * 2);
-        ctx.fillStyle = '#00f0ff';
-        ctx.shadowBlur = 10;
-        ctx.shadowColor = '#00f0ff';
-        ctx.fill();
-        ctx.shadowBlur = 0;
-      }
+    // Points
+    data.forEach((val, i) => {
+      const x = i * spacing;
+      const y = canvas.height - (val / 100) * canvas.height;
+      
+      ctx.beginPath();
+      ctx.arc(x, y, 2, 0, Math.PI * 2);
+      ctx.fillStyle = '#00ffff';
+      ctx.fill();
     });
   }
   
   function updateGraph() {
-    // Décaler les données et ajouter un nouveau point
-    activityData.shift();
-    
-    // Nouveau point avec tendance douce
-    const lastValue = activityData[activityData.length - 1];
-    const change = (Math.random() - 0.5) * 20;
-    let newValue = lastValue + change;
-    newValue = Math.max(20, Math.min(90, newValue));
-    
-    activityData.push(newValue);
+    data.shift();
+    data.push(Math.random() * 80 + 20);
     drawGraph();
   }
   
   drawGraph();
-  setInterval(updateGraph, 150);
+  setInterval(updateGraph, 2000);
+  
+  console.log('✅ Graphique créé');
 });
 
-// ==================== TACTICAL DATA UPDATES ====================
-function updateTacticalData() {
-  const threatElement = document.querySelector('.data-row.threat .data-value');
-  const opportunityElement = document.querySelector('.data-row.opportunity .data-value');
-  const zoneElement = document.querySelector('.data-row.neutral .data-value');
+// ==================== BARRES DE PROGRESSION ====================
+window.addEventListener('DOMContentLoaded', () => {
+  const bars = document.querySelectorAll('.progress-fill');
   
-  if (threatElement) {
-    const threats = Math.floor(8 + Math.random() * 8);
-    animateValue(threatElement, parseInt(threatElement.textContent) || 0, threats);
-  }
+  bars.forEach((bar, index) => {
+    const targetWidth = bar.style.width;
+    bar.style.width = '0%';
+    
+    setTimeout(() => {
+      bar.style.transition = 'width 1.5s ease';
+      bar.style.width = targetWidth;
+    }, 100 + index * 100);
+  });
   
-  if (opportunityElement) {
-    const opportunities = Math.floor(5 + Math.random() * 8);
-    animateValue(opportunityElement, parseInt(opportunityElement.textContent) || 0, opportunities);
-  }
-  
-  if (zoneElement) {
-    const zones = Math.floor(55 + Math.random() * 25);
-    animateValue(zoneElement, parseInt(zoneElement.textContent) || 0, zones, '%');
-  }
-}
+  console.log('✅ Barres de progression animées');
+});
 
-function animateValue(element, start, end, suffix = '') {
-  const duration = 500;
-  const startTime = performance.now();
+// ==================== DONNÉES TACTIQUES ====================
+function updateTacticalData() {
+  const threat = document.querySelector('.data-value.threat');
+  const opportunity = document.querySelector('.data-value.opportunity');
+  const zone = document.querySelector('.data-value.neutral');
   
-  function update(currentTime) {
-    const elapsed = currentTime - startTime;
-    const progress = Math.min(elapsed / duration, 1);
-    const eased = 1 - Math.pow(1 - progress, 3);
-    
-    const current = Math.round(start + (end - start) * eased);
-    element.textContent = current + suffix;
-    
-    if (progress < 1) {
-      requestAnimationFrame(update);
-    }
+  if (threat) {
+    threat.style.opacity = '0';
+    setTimeout(() => {
+      threat.textContent = Math.floor(8 + Math.random() * 8);
+      threat.style.opacity = '1';
+    }, 300);
   }
   
-  requestAnimationFrame(update);
+  if (opportunity) {
+    opportunity.style.opacity = '0';
+    setTimeout(() => {
+      opportunity.textContent = Math.floor(5 + Math.random() * 8);
+      opportunity.style.opacity = '1';
+    }, 300);
+  }
+  
+  if (zone) {
+    zone.style.opacity = '0';
+    setTimeout(() => {
+      zone.textContent = Math.floor(55 + Math.random() * 20) + '%';
+      zone.style.opacity = '1';
+    }, 300);
+  }
 }
 
 setInterval(updateTacticalData, 7000);
 
-// ==================== EVALUATION BAR ====================
+// ==================== BARRE ÉVALUATION ====================
 let currentEval = 0;
 let targetEval = 0;
 
-function initEvaluationBar() {
-  const barFillWhite = document.getElementById('barFillWhite');
-  const barFillBlack = document.getElementById('barFillBlack');
+function initEvalBar() {
+  const barWhite = document.getElementById('barFillWhite');
+  const barBlack = document.getElementById('barFillBlack');
   const barValue = document.getElementById('barValue');
-  const evalLabel = document.getElementById('evalLabel');
   
-  if (!barFillWhite || !barFillBlack || !barValue) {
-    console.warn('⚠️ Éléments de la barre d\'évaluation non trouvés');
+  if (!barWhite || !barBlack || !barValue) {
+    console.error('❌ Barre d\'évaluation non trouvée');
     return;
   }
   
   console.log('✅ Barre d\'évaluation initialisée');
   
   function updateBar() {
-    // Interpolation douce
     const diff = targetEval - currentEval;
-    currentEval += diff * 0.06;
+    currentEval += diff * 0.08;
     
-    // Conversion en pourcentage (-10 à +10 -> 0% à 100%)
     const percentage = Math.max(0, Math.min(100, ((currentEval + 10) / 20) * 100));
     
-    barFillWhite.style.height = percentage + '%';
-    barFillBlack.style.height = (100 - percentage) + '%';
+    barWhite.style.height = percentage + '%';
+    barBlack.style.height = (100 - percentage) + '%';
     
-    // Affichage de la valeur
-    const displayValue = Math.abs(currentEval).toFixed(1);
-    barValue.textContent = currentEval >= 0 ? '+' + displayValue : '-' + displayValue;
+    const displayVal = currentEval.toFixed(1);
+    barValue.textContent = currentEval >= 0 ? '+' + displayVal : displayVal;
     
-    // Couleur et label
     barValue.classList.remove('positive', 'negative');
-    
-    if (currentEval > 0.5) {
+    if (currentEval > 0.3) {
       barValue.classList.add('positive');
-      if (evalLabel) evalLabel.textContent = 'BLANC +';
-    } else if (currentEval < -0.5) {
+    } else if (currentEval < -0.3) {
       barValue.classList.add('negative');
-      if (evalLabel) evalLabel.textContent = 'NOIR +';
-    } else {
-      if (evalLabel) evalLabel.textContent = 'ÉGALITÉ';
     }
   }
   
   function changeTarget() {
-    // Nouvelle évaluation cible (entre -6 et +6)
     targetEval = (Math.random() - 0.5) * 12;
   }
   
-  setInterval(updateBar, 30);
-  setInterval(changeTarget, 5000);
+  setInterval(updateBar, 50);
+  setInterval(changeTarget, 4000);
   
   changeTarget();
 }
 
-// ==================== PROGRESS BARS ANIMATION ====================
-function animateProgressBars() {
-  const progressBars = document.querySelectorAll('.progress-fill');
+window.addEventListener('DOMContentLoaded', () => {
+  setTimeout(initEvalBar, 500);
+});
+
+// ==================== TOGGLE VIEW ====================
+window.addEventListener('DOMContentLoaded', () => {
+  const toggleBtn = document.getElementById('toggleView');
+  const globalContainer = document.getElementById('globalContainer');
+  const masterProfile = document.getElementById('masterProfile');
   
-  progressBars.forEach((bar, index) => {
-    const targetWidth = bar.style.getPropertyValue('--target-width');
-    if (targetWidth) {
-      bar.style.width = '0%';
-      
-      setTimeout(() => {
-        bar.style.transition = 'width 1.5s cubic-bezier(0.4, 0, 0.2, 1)';
-        bar.style.width = targetWidth;
-      }, 100 + index * 150);
+  if (!toggleBtn || !globalContainer || !masterProfile) {
+    console.error('❌ Éléments toggle non trouvés');
+    return;
+  }
+  
+  console.log('✅ Toggle configuré');
+  
+  let currentView = 'global';
+  
+  toggleBtn.addEventListener('click', () => {
+    if (currentView === 'global') {
+      // Vers Master Profile
+      globalContainer.style.display = 'none';
+      masterProfile.style.display = 'flex';
+      toggleBtn.textContent = 'GLOBAL VIEW';
+      currentView = 'master';
+      console.log('📊 Vue: Master Profile');
+    } else {
+      // Vers Global View
+      masterProfile.style.display = 'none';
+      globalContainer.style.display = 'flex';
+      toggleBtn.textContent = 'MASTER PROFILE';
+      currentView = 'global';
+      console.log('🌍 Vue: Global');
     }
   });
-}
+});
 
-// ==================== HOVER EFFECTS ====================
-function setupHoverEffects() {
-  // Piece cards
-  document.querySelectorAll('.piece-card').forEach(card => {
+// ==================== HOVER CARTES ====================
+window.addEventListener('DOMContentLoaded', () => {
+  const cards = document.querySelectorAll('.piece-card');
+  
+  cards.forEach(card => {
     card.addEventListener('mouseenter', () => {
       card.style.transform = 'translateX(8px) scale(1.02)';
     });
     
     card.addEventListener('mouseleave', () => {
-      card.style.transform = '';
+      card.style.transform = 'translateX(0) scale(1)';
     });
   });
+});
+
+// ==================== BOUTON REFRESH ====================
+window.addEventListener('DOMContentLoaded', () => {
+  const refreshBtn = document.querySelector('.panel-btn:last-child');
   
-  // Target items
-  document.querySelectorAll('.target-item').forEach(item => {
-    item.addEventListener('mouseenter', () => {
-      if (!item.classList.contains('active')) {
-        item.style.transform = 'translateX(8px)';
-      }
+  if (refreshBtn) {
+    refreshBtn.addEventListener('click', () => {
+      console.log('🔄 Refresh');
+      refreshBtn.style.transform = 'rotate(360deg)';
+      refreshBtn.style.transition = 'transform 0.6s ease';
+      
+      setTimeout(() => {
+        refreshBtn.style.transform = 'rotate(0deg)';
+      }, 600);
+      
+      const bars = document.querySelectorAll('.progress-fill');
+      bars.forEach(bar => {
+        const currentWidth = bar.style.width;
+        bar.style.width = '0%';
+        setTimeout(() => {
+          bar.style.width = currentWidth;
+        }, 100);
+      });
     });
-    
-    item.addEventListener('mouseleave', () => {
-      if (!item.classList.contains('active')) {
-        item.style.transform = '';
-      }
-    });
-  });
-}
-
-// ==================== SCAN LINE ANIMATION ====================
-function triggerScanLine() {
-  const scanLine = document.querySelector('.scan-line');
-  if (scanLine) {
-    scanLine.classList.add('active');
-    setTimeout(() => {
-      scanLine.classList.remove('active');
-    }, 2000);
-  }
-}
-
-// Déclencher le scan périodiquement
-setInterval(triggerScanLine, 15000);
-
-// ==================== KEYBOARD SHORTCUTS ====================
-document.addEventListener('keydown', (e) => {
-  // Espace pour basculer le profil
-  if (e.code === 'Space' && !e.target.matches('input, textarea')) {
-    e.preventDefault();
-    const toggleBtn = document.getElementById('toggleView');
-    if (toggleBtn) toggleBtn.click();
-  }
-  
-  // S pour déclencher un scan
-  if (e.code === 'KeyS' && !e.target.matches('input, textarea')) {
-    triggerScanLine();
   }
 });
 
-// ==================== INITIALISATION ====================
+// ==================== FADE IN ====================
 window.addEventListener('DOMContentLoaded', () => {
-  console.log('🎯 Initialisation des composants du dashboard...');
+  document.body.style.opacity = '0';
   
   setTimeout(() => {
-    initEvaluationBar();
-    animateProgressBars();
-    setupHoverEffects();
-    
-    // Premier scan
-    setTimeout(triggerScanLine, 2000);
-    
-    console.log('✅ Dashboard NEXUS CHESS initialisé avec succès');
-  }, 500);
+    document.body.style.transition = 'opacity 1s ease';
+    document.body.style.opacity = '1';
+  }, 100);
+  
+  console.log('✅ Dashboard chargé avec succès');
+  console.log('🎉 Tous les systèmes opérationnels');
 });
-
-// ==================== EXPORT POUR DEBUG ====================
-window.NEXUS = {
-  triggerScan: triggerScanLine,
-  updateTactical: updateTacticalData,
-  version: '2.4.1'
-};
-
-console.log('✅ Module Dashboard chargé');
