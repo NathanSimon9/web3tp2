@@ -1,238 +1,321 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CHESS AI TACTICAL DASHBOARD</title>
-
-<!-- MapLibre CSS -->
-<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.13.0/dist/maplibre-gl.css">
-
-<!-- CSS -->
-<link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
-<link rel="stylesheet" href="./node_modules/bootstrap-icons/font/bootstrap-icons.css">
-<link rel="stylesheet" href="./src/css/styles.css">
-
-<!-- IMPORTMAP -->
-<script type="importmap">
-{
-  "imports": {
-    "three": "./node_modules/three/build/three.module.js",
-    "three/addons/": "./node_modules/three/examples/jsm/",
-    "maplibre-gl": "https://esm.sh/maplibre-gl@5.13.0"
-  }
-}
-</script>
-
-<!-- JS -->
-<script src="./node_modules/bootstrap/dist/js/bootstrap.bundle.min.js" defer></script>
-<script src="./src/js/animejs.js" type="module"></script>
-<script src="./src/js/chartjs.js" type="module"></script>
-<script src="./src/js/bootstrap.js" defer></script>
-
-<!-- MapLibre + scanner AI -->
-<script type="module" src="./src/js/maplibre.js"></script>
-
-<!-- Three.js pièces d'échecs -->
-<script type="module" src="./src/js/three-loader.js"></script>
-</head>
-
-<body>
-  <!-- Scanlines overlay -->
-  <div class="scanlines"></div>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NEXUS CHESS • TACTICAL AI COMMAND</title>
   
-  <!-- Vignette effect -->
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+  
+  <!-- MapLibre CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.0.0/dist/maplibre-gl.css">
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="./src/css/styles.css">
+</head>
+<body>
+  <!-- Effets visuels avancés -->
+  <div class="cyber-grid"></div>
+  <div class="scanlines"></div>
   <div class="vignette"></div>
-
+  <div class="scan-line"></div>
+  <div class="corner-decorations">
+    <div class="corner top-left"></div>
+    <div class="corner top-right"></div>
+    <div class="corner bottom-left"></div>
+    <div class="corner bottom-right"></div>
+  </div>
+  
+  <!-- Carte MapLibre -->
+  <div id="carte"></div>
+  
   <!-- Header HUD -->
   <header class="hud-header">
     <div class="header-left">
       <div class="logo-section">
-        <div class="logo-icon"></div>
-        <span class="logo-text">CHESS<span class="accent">AI</span></span>
-      </div>
-      <div class="system-status">
-        <span class="status-indicator active"></span>
-        <span class="status-text">TACTICAL SYSTEM ONLINE</span>
+        <div class="logo-icon">
+          <div class="logo-inner"></div>
+        </div>
+        <div class="logo-text-container">
+          <span class="logo-text">NEXUS<span class="accent">CHESS</span></span>
+          <span class="logo-subtitle">TACTICAL COMMAND v2.4</span>
+        </div>
       </div>
     </div>
     <div class="header-center">
+      <div class="system-status">
+        <div class="status-ring">
+          <span class="status-indicator"></span>
+        </div>
+        <span class="status-text">SYSTÈME ACTIF</span>
+      </div>
       <div class="mission-timer">
-        <span class="timer-label">MISSION TIME</span>
+        <span class="timer-label">TEMPS DE MISSION</span>
         <span class="timer-value" id="missionTimer">00:00:00</span>
+      </div>
+      <div class="date-display">
+        <span class="date-label">DATE SYSTÈME</span>
+        <span class="date-value" id="systemDate">2025.12.05</span>
       </div>
     </div>
     <div class="header-right">
       <div class="stat-item">
-        <i class="bi bi-cpu"></i>
-        <span id="cpuUsage">47%</span>
+        <div class="stat-icon"><i class="bi bi-cpu-fill"></i></div>
+        <div class="stat-info">
+          <span class="stat-label">CPU</span>
+          <span class="stat-val" id="cpuUsage">47%</span>
+        </div>
       </div>
       <div class="stat-item">
-        <i class="bi bi-geo-alt"></i>
-        <span id="activeTargets">15</span>
+        <div class="stat-icon"><i class="bi bi-crosshair"></i></div>
+        <div class="stat-info">
+          <span class="stat-label">CIBLES</span>
+          <span class="stat-val" id="activeTargets">15</span>
+        </div>
       </div>
-      <div class="stat-item">
-        <i class="bi bi-shield-check"></i>
-        <span>SECURE</span>
+      <div class="stat-item secure">
+        <div class="stat-icon"><i class="bi bi-shield-fill-check"></i></div>
+        <div class="stat-info">
+          <span class="stat-label">SÉCURITÉ</span>
+          <span class="stat-val">OPTIMAL</span>
+        </div>
       </div>
     </div>
   </header>
-
-  <!-- Carte MapLibre en arrière-plan -->
-  <div id="carte"></div>
-
-  <!-- Left Panel - Pieces (COLLÉ À GAUCHE) -->
+  
+  <!-- Panneau Gauche - Pièces d'échecs -->
   <div class="left-panel">
     <div class="panel-header">
       <div class="panel-title">
-        <i class="bi bi-bullseye"></i>
-        TACTICAL UNITS
+        <div class="title-icon">
+          <i class="bi bi-grid-3x3"></i>
+        </div>
+        <div class="title-text">
+          <span class="title-main">UNITÉS TACTIQUES</span>
+          <span class="title-sub">Pièces d'échecs • Analyse 3D</span>
+        </div>
       </div>
       <div class="panel-controls">
-        <button class="panel-btn"><i class="bi bi-gear"></i></button>
-        <button class="panel-btn"><i class="bi bi-arrow-clockwise"></i></button>
+        <button class="panel-btn" title="Paramètres"><i class="bi bi-sliders"></i></button>
+        <button class="panel-btn" title="Actualiser"><i class="bi bi-arrow-repeat"></i></button>
       </div>
     </div>
     
     <div class="chess-grid">
-      <div class="piece-card">
+      <!-- ROI -->
+      <div class="piece-card" data-piece="roi">
+        <div class="card-glow"></div>
         <div class="card-header">
-          <span class="piece-name">ROI</span>
-          <span class="piece-id">#K01</span>
+          <div class="piece-identity">
+            <span class="piece-name">ROI</span>
+            <span class="piece-symbol">♔</span>
+          </div>
+          <span class="piece-id">#K-001</span>
         </div>
-        <div class="piece-viewer" id="piece-1"></div>
+        <div class="piece-viewer" id="piece-1">
+          <div class="viewer-loading">
+            <div class="loading-spinner"></div>
+            <span>Chargement 3D...</span>
+          </div>
+        </div>
         <div class="card-stats">
           <div class="stat-row">
-            <span>VALEUR</span>
+            <span class="stat-name"><i class="bi bi-gem"></i> VALEUR</span>
             <div class="progress-bar">
-              <div class="progress-fill" style="width: 100%"></div>
+              <div class="progress-fill value-fill" style="--target-width: 100%"></div>
+              <div class="progress-glow"></div>
             </div>
-            <span class="stat-value">100%</span>
+            <span class="stat-value">∞</span>
           </div>
           <div class="stat-row">
-            <span>MOBILITÉ</span>
+            <span class="stat-name"><i class="bi bi-arrows-move"></i> MOBILITÉ</span>
             <div class="progress-bar">
-              <div class="progress-fill mobility" style="width: 45%"></div>
+              <div class="progress-fill mobility-fill" style="--target-width: 45%"></div>
+              <div class="progress-glow"></div>
             </div>
             <span class="stat-value">45%</span>
           </div>
         </div>
       </div>
 
-      <div class="piece-card">
+      <!-- REINE -->
+      <div class="piece-card" data-piece="reine">
+        <div class="card-glow"></div>
         <div class="card-header">
-          <span class="piece-name">REINE</span>
-          <span class="piece-id">#Q01</span>
+          <div class="piece-identity">
+            <span class="piece-name">REINE</span>
+            <span class="piece-symbol">♕</span>
+          </div>
+          <span class="piece-id">#Q-001</span>
         </div>
-        <div class="piece-viewer" id="piece-2"></div>
+        <div class="piece-viewer" id="piece-2">
+          <div class="viewer-loading">
+            <div class="loading-spinner"></div>
+            <span>Chargement 3D...</span>
+          </div>
+        </div>
         <div class="card-stats">
           <div class="stat-row">
-            <span>VALEUR</span>
+            <span class="stat-name"><i class="bi bi-gem"></i> VALEUR</span>
             <div class="progress-bar">
-              <div class="progress-fill" style="width: 90%"></div>
+              <div class="progress-fill value-fill" style="--target-width: 90%"></div>
+              <div class="progress-glow"></div>
             </div>
-            <span class="stat-value">90%</span>
+            <span class="stat-value">9</span>
           </div>
           <div class="stat-row">
-            <span>MOBILITÉ</span>
+            <span class="stat-name"><i class="bi bi-arrows-move"></i> MOBILITÉ</span>
             <div class="progress-bar">
-              <div class="progress-fill mobility" style="width: 95%"></div>
+              <div class="progress-fill mobility-fill" style="--target-width: 95%"></div>
+              <div class="progress-glow"></div>
             </div>
             <span class="stat-value">95%</span>
           </div>
         </div>
       </div>
 
-      <div class="piece-card">
+      <!-- FOU -->
+      <div class="piece-card" data-piece="fou">
+        <div class="card-glow"></div>
         <div class="card-header">
-          <span class="piece-name">FOU</span>
-          <span class="piece-id">#B01</span>
+          <div class="piece-identity">
+            <span class="piece-name">FOU</span>
+            <span class="piece-symbol">♗</span>
+          </div>
+          <span class="piece-id">#B-001</span>
         </div>
-        <div class="piece-viewer" id="piece-3"></div>
+        <div class="piece-viewer" id="piece-3">
+          <div class="viewer-loading">
+            <div class="loading-spinner"></div>
+            <span>Chargement 3D...</span>
+          </div>
+        </div>
         <div class="card-stats">
           <div class="stat-row">
-            <span>VALEUR</span>
+            <span class="stat-name"><i class="bi bi-gem"></i> VALEUR</span>
             <div class="progress-bar">
-              <div class="progress-fill" style="width: 30%"></div>
+              <div class="progress-fill value-fill" style="--target-width: 33%"></div>
+              <div class="progress-glow"></div>
             </div>
-            <span class="stat-value">30%</span>
+            <span class="stat-value">3</span>
           </div>
           <div class="stat-row">
-            <span>MOBILITÉ</span>
+            <span class="stat-name"><i class="bi bi-arrows-move"></i> MOBILITÉ</span>
             <div class="progress-bar">
-              <div class="progress-fill mobility" style="width: 70%"></div>
+              <div class="progress-fill mobility-fill" style="--target-width: 70%"></div>
+              <div class="progress-glow"></div>
             </div>
             <span class="stat-value">70%</span>
           </div>
         </div>
       </div>
 
-      <div class="piece-card">
+      <!-- CHEVAL -->
+      <div class="piece-card" data-piece="cheval">
+        <div class="card-glow"></div>
         <div class="card-header">
-          <span class="piece-name">CHEVAL</span>
-          <span class="piece-id">#N01</span>
+          <div class="piece-identity">
+            <span class="piece-name">CAVALIER</span>
+            <span class="piece-symbol">♘</span>
+          </div>
+          <span class="piece-id">#N-001</span>
         </div>
-        <div class="piece-viewer" id="piece-4"></div>
+        <div class="piece-viewer" id="piece-4">
+          <div class="viewer-loading">
+            <div class="loading-spinner"></div>
+            <span>Chargement 3D...</span>
+          </div>
+        </div>
         <div class="card-stats">
           <div class="stat-row">
-            <span>VALEUR</span>
+            <span class="stat-name"><i class="bi bi-gem"></i> VALEUR</span>
             <div class="progress-bar">
-              <div class="progress-fill" style="width: 30%"></div>
+              <div class="progress-fill value-fill" style="--target-width: 33%"></div>
+              <div class="progress-glow"></div>
             </div>
-            <span class="stat-value">30%</span>
+            <span class="stat-value">3</span>
           </div>
           <div class="stat-row">
-            <span>MOBILITÉ</span>
+            <span class="stat-name"><i class="bi bi-arrows-move"></i> MOBILITÉ</span>
             <div class="progress-bar">
-              <div class="progress-fill mobility" style="width: 65%"></div>
+              <div class="progress-fill mobility-fill" style="--target-width: 65%"></div>
+              <div class="progress-glow"></div>
             </div>
             <span class="stat-value">65%</span>
           </div>
         </div>
       </div>
 
-      <div class="piece-card">
+      <!-- TOUR -->
+      <div class="piece-card" data-piece="tour">
+        <div class="card-glow"></div>
         <div class="card-header">
-          <span class="piece-name">TOUR</span>
-          <span class="piece-id">#R01</span>
+          <div class="piece-identity">
+            <span class="piece-name">TOUR</span>
+            <span class="piece-symbol">♖</span>
+          </div>
+          <span class="piece-id">#R-001</span>
         </div>
-        <div class="piece-viewer" id="piece-5"></div>
+        <div class="piece-viewer" id="piece-5">
+          <div class="viewer-loading">
+            <div class="loading-spinner"></div>
+            <span>Chargement 3D...</span>
+          </div>
+        </div>
         <div class="card-stats">
           <div class="stat-row">
-            <span>VALEUR</span>
+            <span class="stat-name"><i class="bi bi-gem"></i> VALEUR</span>
             <div class="progress-bar">
-              <div class="progress-fill" style="width: 50%"></div>
+              <div class="progress-fill value-fill" style="--target-width: 55%"></div>
+              <div class="progress-glow"></div>
             </div>
-            <span class="stat-value">50%</span>
+            <span class="stat-value">5</span>
           </div>
           <div class="stat-row">
-            <span>MOBILITÉ</span>
+            <span class="stat-name"><i class="bi bi-arrows-move"></i> MOBILITÉ</span>
             <div class="progress-bar">
-              <div class="progress-fill mobility" style="width: 80%"></div>
+              <div class="progress-fill mobility-fill" style="--target-width: 80%"></div>
+              <div class="progress-glow"></div>
             </div>
             <span class="stat-value">80%</span>
           </div>
         </div>
       </div>
 
-      <div class="piece-card">
+      <!-- PION -->
+      <div class="piece-card" data-piece="pion">
+        <div class="card-glow"></div>
         <div class="card-header">
-          <span class="piece-name">PION</span>
-          <span class="piece-id">#P01</span>
+          <div class="piece-identity">
+            <span class="piece-name">PION</span>
+            <span class="piece-symbol">♙</span>
+          </div>
+          <span class="piece-id">#P-001</span>
         </div>
-        <div class="piece-viewer" id="piece-6"></div>
+        <div class="piece-viewer" id="piece-6">
+          <div class="viewer-loading">
+            <div class="loading-spinner"></div>
+            <span>Chargement 3D...</span>
+          </div>
+        </div>
         <div class="card-stats">
           <div class="stat-row">
-            <span>VALEUR</span>
+            <span class="stat-name"><i class="bi bi-gem"></i> VALEUR</span>
             <div class="progress-bar">
-              <div class="progress-fill" style="width: 10%"></div>
+              <div class="progress-fill value-fill" style="--target-width: 11%"></div>
+              <div class="progress-glow"></div>
             </div>
-            <span class="stat-value">10%</span>
+            <span class="stat-value">1</span>
           </div>
           <div class="stat-row">
-            <span>MOBILITÉ</span>
+            <span class="stat-name"><i class="bi bi-arrows-move"></i> MOBILITÉ</span>
             <div class="progress-bar">
-              <div class="progress-fill mobility" style="width: 35%"></div>
+              <div class="progress-fill mobility-fill" style="--target-width: 35%"></div>
+              <div class="progress-glow"></div>
             </div>
             <span class="stat-value">35%</span>
           </div>
@@ -240,162 +323,242 @@
       </div>
     </div>
   </div>
-
-  <!-- Evaluation Bar (JUSTE À DROITE DU LEFT PANEL) -->
+  
+  <!-- Barre d'évaluation -->
   <div class="evaluation-bar">
     <div class="bar-header">
-      <i class="bi bi-bar-chart-fill"></i>
-      <span>EVAL</span>
+      <div class="bar-icon">
+        <i class="bi bi-graph-up-arrow"></i>
+      </div>
+      <span class="bar-title">ÉVAL</span>
     </div>
     <div class="bar-container">
       <div class="bar-track">
         <div class="bar-fill white" id="barFillWhite" style="height: 50%"></div>
         <div class="bar-fill black" id="barFillBlack" style="height: 50%"></div>
         <div class="bar-center-line"></div>
+        <div class="bar-markers">
+          <span class="marker">+5</span>
+          <span class="marker">+2.5</span>
+          <span class="marker center">0</span>
+          <span class="marker">-2.5</span>
+          <span class="marker">-5</span>
+        </div>
       </div>
     </div>
     <div class="bar-value" id="barValue">0.0</div>
+    <div class="bar-label">
+      <span id="evalLabel">ÉGALITÉ</span>
+    </div>
   </div>
   
- <!-- Right Panel -->
-<div class="right-panel">
-
-    <!-- Bouton switch centré en haut -->
+  <!-- Panneau Droit -->
+  <div class="right-panel">
     <div class="top-switch-container">
-        <button id="toggleView" class="toggle-btn">SWITCH MODE</button>
+      <button id="toggleView" class="toggle-btn">
+        <span class="btn-icon"><i class="bi bi-person-badge"></i></span>
+        <span class="btn-text">PROFIL MAÎTRE</span>
+      </button>
     </div>
 
-    <!-- MODE GLOBAL -->
-    <div id="globalContainer" style="display: flex; flex-direction: column; gap: 20px;">
-
-        <!-- SCAN GLOBAL -->
-        <div class="intel-section">
-            <div class="section-header">
-                <i class="bi bi-radar"></i>
-                <span>SCAN GLOBAL</span>
-            </div>
-            <div class="scan-display" id="scanDisplay">
-                <div class="scan-info">
-                    <div class="scan-target" id="scanTarget">MOSCOW</div>
-                    <div class="scan-coordinates" id="scanCoords">55.7558°N, 37.6173°E</div>
-                </div>
-            </div>
+    <!-- Mode Global -->
+    <div id="globalContainer">
+      <div class="intel-section">
+        <div class="section-header">
+          <div class="section-icon"><i class="bi bi-radar"></i></div>
+          <div class="section-title">
+            <span class="title-main">SCAN GLOBAL</span>
+            <span class="title-sub">Analyse en temps réel</span>
+          </div>
+          <div class="section-status online">ACTIF</div>
         </div>
-
-        <!-- ANALYSE TACTIQUE -->
-        <div class="intel-section">
-            <div class="section-header">
-                <i class="bi bi-bar-chart"></i>
-                <span>ANALYSE TACTIQUE</span>
-            </div>
-            <div class="tactical-data">
-                <div class="data-row">
-                    <span class="data-label">Menaces détectées</span>
-                    <span class="data-value threat">12</span>
-                </div>
-                <div class="data-row">
-                    <span class="data-label">Opportunités</span>
-                    <span class="data-value opportunity">8</span>
-                </div>
-                <div class="data-row">
-                    <span class="data-label">Zones contrôlées</span>
-                    <span class="data-value neutral">64%</span>
-                </div>
-                <div class="data-row">
-                    <span class="data-label">Niveau défense</span>
-                    <span class="data-value success">OPTIMAL</span>
-                </div>
-            </div>
+        <div class="scan-display">
+          <div class="scan-visual">
+            <div class="scan-ring"></div>
+            <div class="scan-ring delayed"></div>
+            <div class="scan-dot"></div>
+          </div>
+          <div class="scan-info">
+            <div class="scan-target" id="scanTarget">MOSCOW</div>
+            <div class="scan-coordinates" id="scanCoords">55.7558°N, 37.6173°E</div>
+          </div>
         </div>
+      </div>
 
-        <!-- ACTIVITÉ RÉSEAU -->
-        <div class="intel-section">
-            <div class="section-header">
-                <i class="bi bi-activity"></i>
-                <span>ACTIVITÉ RÉSEAU</span>
-            </div>
-            <div class="network-activity">
-                <canvas id="activityGraph" width="280" height="120"></canvas>
-            </div>
+      <div class="intel-section">
+        <div class="section-header">
+          <div class="section-icon"><i class="bi bi-lightning-charge-fill"></i></div>
+          <div class="section-title">
+            <span class="title-main">ANALYSE TACTIQUE</span>
+            <span class="title-sub">Évaluation stratégique</span>
+          </div>
         </div>
-
-        <!-- CIBLES GLOBALES -->
-        <div class="intel-section">
-            <div class="section-header">
-                <i class="bi bi-globe"></i>
-                <span>CIBLES GLOBALES</span>
-            </div>
-            <div class="target-list">
-                <div class="target-item active">
-                    <span class="target-dot"></span>
-                    <span class="target-name">MOSCOW</span>
-                    <span class="target-status">ACTIF</span>
-                </div>
-                <div class="target-item">
-                    <span class="target-dot"></span>
-                    <span class="target-name">NEW DELHI</span>
-                    <span class="target-status">EN ATTENTE</span>
-                </div>
-                <div class="target-item">
-                    <span class="target-dot"></span>
-                    <span class="target-name">BEIJING</span>
-                    <span class="target-status">EN ATTENTE</span>
-                </div>
-                <div class="target-item">
-                    <span class="target-dot"></span>
-                    <span class="target-name">OSLO</span>
-                    <span class="target-status">EN ATTENTE</span>
-                </div>
-            </div>
+        <div class="tactical-data">
+          <div class="data-row threat">
+            <div class="data-icon"><i class="bi bi-exclamation-triangle-fill"></i></div>
+            <span class="data-label">Menaces détectées</span>
+            <span class="data-value">12</span>
+          </div>
+          <div class="data-row opportunity">
+            <div class="data-icon"><i class="bi bi-bullseye"></i></div>
+            <span class="data-label">Opportunités</span>
+            <span class="data-value">8</span>
+          </div>
+          <div class="data-row neutral">
+            <div class="data-icon"><i class="bi bi-grid-fill"></i></div>
+            <span class="data-label">Zones contrôlées</span>
+            <span class="data-value">64%</span>
+          </div>
+          <div class="data-row success">
+            <div class="data-icon"><i class="bi bi-shield-fill-check"></i></div>
+            <span class="data-label">Niveau défense</span>
+            <span class="data-value">OPTIMAL</span>
+          </div>
         </div>
+      </div>
 
+      <div class="intel-section">
+        <div class="section-header">
+          <div class="section-icon"><i class="bi bi-activity"></i></div>
+          <div class="section-title">
+            <span class="title-main">ACTIVITÉ RÉSEAU</span>
+            <span class="title-sub">Flux de données</span>
+          </div>
+        </div>
+        <div class="network-activity">
+          <canvas id="activityGraph" width="280" height="120"></canvas>
+        </div>
+      </div>
+
+      <div class="intel-section">
+        <div class="section-header">
+          <div class="section-icon"><i class="bi bi-geo-alt-fill"></i></div>
+          <div class="section-title">
+            <span class="title-main">CIBLES GLOBALES</span>
+            <span class="title-sub">Grands Maîtres d'échecs</span>
+          </div>
+        </div>
+        <div class="target-list">
+          <div class="target-item active">
+            <div class="target-dot"></div>
+            <div class="target-info">
+              <span class="target-name">MOSCOW</span>
+              <span class="target-master">Garry Kasparov</span>
+            </div>
+            <span class="target-status">ACTIF</span>
+          </div>
+          <div class="target-item">
+            <div class="target-dot"></div>
+            <div class="target-info">
+              <span class="target-name">WASHINGTON DC</span>
+              <span class="target-master">Bobby Fischer</span>
+            </div>
+            <span class="target-status">EN ATTENTE</span>
+          </div>
+          <div class="target-item">
+            <div class="target-dot"></div>
+            <div class="target-info">
+              <span class="target-name">OSLO</span>
+              <span class="target-master">Magnus Carlsen</span>
+            </div>
+            <span class="target-status">EN ATTENTE</span>
+          </div>
+          <div class="target-item">
+            <div class="target-dot"></div>
+            <div class="target-info">
+              <span class="target-name">PARIS</span>
+              <span class="target-master">Alexander Alekhine</span>
+            </div>
+            <span class="target-status">EN ATTENTE</span>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <!-- MODE MASTER PROFILE -->
+    <!-- Mode Master Profile -->
     <div class="master-profile" id="masterProfile" style="display: none;">
-
-        <div class="profile-header">
-            <div class="profile-avatar" id="profileAvatar"></div>
-            <div class="profile-info">
-                <h2 class="profile-name" id="profileName">GARRY KASPAROV</h2>
-                <p class="profile-title" id="profileTitle">World Champion</p>
-                <p class="profile-location" id="profileLocation">MOSCOW, RUSSIA</p>
-            </div>
+      <div class="profile-header">
+        <div class="profile-avatar-container">
+          <div class="avatar-ring"></div>
+          <div class="profile-avatar" id="profileAvatar"></div>
+          <div class="avatar-scan"></div>
         </div>
-
-        <div class="profile-stats">
-            <div class="profile-stat">
-                <span class="stat-label">ELO RATING</span>
-                <span class="stat-number" id="profileElo">2851</span>
-            </div>
-            <div class="profile-stat">
-                <span class="stat-label">PEAK YEAR</span>
-                <span class="stat-number" id="profileYear">1999</span>
-            </div>
-            <div class="profile-stat">
-                <span class="stat-label">TITLES</span>
-                <span class="stat-number" id="profileTitles">15</span>
-            </div>
+        <div class="profile-info">
+          <h2 class="profile-name" id="profileName">GARRY KASPAROV</h2>
+          <p class="profile-title" id="profileTitle">World Champion</p>
+          <p class="profile-location">
+            <i class="bi bi-geo-alt"></i>
+            <span id="profileLocation">MOSCOW, RUSSIA</span>
+          </p>
         </div>
+      </div>
 
-        <div class="profile-radar">
-            <canvas id="radarChart" width="280" height="280"></canvas>
+      <div class="profile-stats">
+        <div class="profile-stat">
+          <div class="stat-ring">
+            <svg viewBox="0 0 36 36">
+              <path class="stat-ring-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+              <path class="stat-ring-fill" stroke-dasharray="100, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+            </svg>
+          </div>
+          <span class="stat-label">ELO RATING</span>
+          <span class="stat-number" id="profileElo">2851</span>
         </div>
+        <div class="profile-stat">
+          <div class="stat-ring">
+            <svg viewBox="0 0 36 36">
+              <path class="stat-ring-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+              <path class="stat-ring-fill year" stroke-dasharray="85, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+            </svg>
+          </div>
+          <span class="stat-label">PEAK YEAR</span>
+          <span class="stat-number" id="profileYear">1999</span>
+        </div>
+        <div class="profile-stat">
+          <div class="stat-ring">
+            <svg viewBox="0 0 36 36">
+              <path class="stat-ring-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+              <path class="stat-ring-fill titles" stroke-dasharray="75, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+            </svg>
+          </div>
+          <span class="stat-label">TITRES</span>
+          <span class="stat-number" id="profileTitles">15</span>
+        </div>
+      </div>
 
-    </div>
-
-</div>
-
-
-
-  <!-- Bottom Bar -->
-  <div class="bottom-bar">
-    <div class="notification-feed">
-      <div class="notification" id="notification">
-        <i class="bi bi-info-circle"></i>
-        <span>Système initialisé • Tous les modules opérationnels</span>
+      <div class="profile-radar">
+        <div class="radar-header">
+          <span class="radar-title">ANALYSE DES COMPÉTENCES</span>
+        </div>
+        <canvas id="radarChart" width="280" height="280"></canvas>
       </div>
     </div>
   </div>
+  
+  <!-- Barre du bas -->
+  <div class="bottom-bar">
+    <div class="bottom-left">
+      <div class="connection-status">
+        <span class="pulse-dot"></span>
+        <span class="connection-text">CONNEXION STABLE</span>
+      </div>
+    </div>
+    <div class="notification-feed">
+      <div class="notification" id="notification">
+        <i class="bi bi-broadcast"></i>
+        <span>Système initialisé • Tous les modules opérationnels</span>
+      </div>
+    </div>
+    <div class="bottom-right">
+      <div class="version-info">
+        <span>NEXUS v2.4.1</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script type="module" src="./src/js/three-loader.js"></script>
+  <script type="module" src="./src/js/maplibre.js"></script>
+  <script type="module" src="./src/js/dashboard.js"></script>
 </body>
 </html>
