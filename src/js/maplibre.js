@@ -566,8 +566,4 @@ document.addEventListener('DOMContentLoaded', () => {
   setTimeout(initMap, 100);
 });
 
-<<<<<<< HEAD
-
-=======
 console.log('✅ MapLibre module chargé');
->>>>>>> cd0e9e542b15e50bd4036a418db8a269ac3e7125
