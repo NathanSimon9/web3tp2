@@ -5,14 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CHESS AI TACTICAL DASHBOARD</title>
   
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+  
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
   
-  <!-- CSS depuis node_modules -->
-  <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="./node_modules/bootstrap-icons/font/bootstrap-icons.css">
-  
-  <!-- MapLibre CSS (externe - pas dans npm pour ce projet) -->
+  <!-- MapLibre CSS -->
   <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css">
   
   <!-- Custom CSS -->
@@ -104,7 +106,7 @@
       </div>
     </header>
 
-    <!-- ========== PANNEAU GAUCHE - PIÈCES 3D ========== -->
+    <!-- ========== PANNEAU GAUCHE - PIÈCES ZDOG ========== -->
     <aside class="left-panel">
       <div class="panel-header">
         <div class="panel-title">
@@ -119,7 +121,7 @@
       </div>
       
       <div class="chess-grid">
-        <!-- ROI -->
+        <!-- ROI - ZDog -->
         <div class="piece-card" data-piece="king">
           <div class="card-header d-flex justify-content-between">
             <span class="piece-name">ROI</span>
@@ -144,7 +146,7 @@
           </div>
         </div>
 
-        <!-- REINE -->
+        <!-- REINE - ZDog -->
         <div class="piece-card" data-piece="queen">
           <div class="card-header d-flex justify-content-between">
             <span class="piece-name">REINE</span>
@@ -169,7 +171,7 @@
           </div>
         </div>
 
-        <!-- FOU -->
+        <!-- FOU - ZDog -->
         <div class="piece-card" data-piece="bishop">
           <div class="card-header d-flex justify-content-between">
             <span class="piece-name">FOU</span>
@@ -194,7 +196,7 @@
           </div>
         </div>
 
-        <!-- CAVALIER -->
+        <!-- CAVALIER - ZDog -->
         <div class="piece-card" data-piece="knight">
           <div class="card-header d-flex justify-content-between">
             <span class="piece-name">CAVALIER</span>
@@ -219,7 +221,7 @@
           </div>
         </div>
 
-        <!-- TOUR -->
+        <!-- TOUR - ZDog -->
         <div class="piece-card" data-piece="rook">
           <div class="card-header d-flex justify-content-between">
             <span class="piece-name">TOUR</span>
@@ -244,7 +246,7 @@
           </div>
         </div>
 
-        <!-- PION -->
+        <!-- PION - ZDog -->
         <div class="piece-card" data-piece="pawn">
           <div class="card-header d-flex justify-content-between">
             <span class="piece-name">PION</span>
@@ -361,7 +363,7 @@
           </div>
         </div>
 
-        <!-- Graphique Activité ChartJS -->
+        <!-- Graphique Radar ChartJS -->
         <div class="intel-section">
           <div class="section-header">
             <i class="bi bi-activity"></i>
@@ -379,7 +381,7 @@
             <span>CIBLES GLOBALES</span>
           </div>
           <div class="target-list" id="targetList">
-            <!-- Rempli dynamiquement par JS -->
+            <!-- Dynamiquement rempli par JS -->
           </div>
         </div>
       </div>
@@ -473,44 +475,39 @@
     </div>
   </div>
 
-  <!-- ========== SCRIPTS ========== -->
+  <!-- Scripts -->
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   
-  <!-- ImportMap pour AnimeJS et Chart.js depuis node_modules -->
+  <!-- MapLibre -->
+  <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
+  
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  
+  <!-- Anime.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
+  
+  <!-- Three.js + Loaders pour OBJ/MTL -->
   <script type="importmap">
     {
       "imports": {
-        "animejs": "./node_modules/animejs/lib/anime.es.js",
-        "chart.js": "./node_modules/chart.js/dist/chart.js",
-        "@kurkle/color": "./node_modules/@kurkle/color/dist/color.esm.js",
         "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
         "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
       }
     }
   </script>
   
-  <!-- Scripts en module (AnimeJS et ChartJS) -->
-  <script src="./src/js/animejs.js" type="module"></script>
-  <script src="./src/js/chartjs.js" type="module"></script>
+  <!-- Tone.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
   
-  <!-- Three.js pour les pièces 3D (module) -->
-  <script src="./src/js/zdog.js" type="module"></script>
-  
-  <!-- Bootstrap JS depuis node_modules (defer) -->
-  <script src="./node_modules/bootstrap/dist/js/bootstrap.bundle.min.js" defer></script>
-  
-  <!-- Script Bootstrap personnalisé (defer) -->
-  <script src="./src/js/bootstrap.js" defer></script>
-  
-  <!-- MapLibre (externe) -->
-  <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js" defer></script>
-  <script src="./src/js/maplibre.js" defer></script>
-  
-  <!-- Tone.js (externe) -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js" defer></script>
-  <script src="./src/js/tonejs.js" defer></script>
-  
-  <!-- VFX -->
-  <script src="./src/js/vfx.js" defer></script>
-
+  <!-- Custom Scripts -->
+  <script src="./src/js/vfx.js"></script>
+  <script src="./src/js/bootstrap.js"></script>
+  <script src="./src/js/animejs.js"></script>
+  <script src="./src/js/chartjs.js"></script>
+  <script src="./src/js/maplibre.js"></script>
+  <script type="module" src="./src/js/zdog.js"></script>
+  <script src="./src/js/tonejs.js"></script>
 </body>
 </html>

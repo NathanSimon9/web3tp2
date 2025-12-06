@@ -2,10 +2,13 @@
  * ============================================
  * ANIMEJS.JS - Animations avec Anime.js
  * ============================================
- * Import depuis node_modules via importmap
+ * Ce fichier gère toutes les animations:
+ * - Timer de mission
+ * - Compteurs animés
+ * - Animations d'entrée
+ * - Effets visuels
+ * - Barre d'évaluation
  */
-
-import anime from 'animejs';
 
 console.log('🎬 Initialisation des animations Anime.js...');
 
@@ -143,20 +146,22 @@ let currentNotification = 0;
 function updateNotification() {
   const notificationSpan = document.querySelector('#notification span');
   if (notificationSpan) {
+    // Fade out
     anime({
       targets: notificationSpan,
-      opacity: [1, 0],
-      translateX: [0, -20],
+      opacity: 0,
+      translateX: -20,
       duration: 300,
       easing: 'easeInQuad',
       complete: function() {
         currentNotification = (currentNotification + 1) % notifications.length;
         notificationSpan.textContent = notifications[currentNotification];
         
+        // Fade in
         anime({
           targets: notificationSpan,
-          opacity: [0, 1],
-          translateX: [-20, 0],
+          opacity: 1,
+          translateX: 0,
           duration: 300,
           easing: 'easeOutQuad'
         });
@@ -179,17 +184,21 @@ function initEvaluationBar() {
   console.log('✅ Barre d\'évaluation initialisée');
   
   function updateBar() {
+    // Interpolation fluide
     const diff = targetEval - currentEval;
     currentEval += diff * 0.08;
     
+    // Convertir en pourcentage (-10 à +10 -> 0% à 100%)
     const percentage = Math.max(0, Math.min(100, ((currentEval + 10) / 20) * 100));
     
     barFillWhite.style.height = percentage + '%';
     barFillBlack.style.height = (100 - percentage) + '%';
     
+    // Afficher la valeur
     const displayValue = currentEval.toFixed(1);
     barValue.textContent = currentEval >= 0 ? '+' + displayValue : displayValue;
     
+    // Couleur selon avantage
     barValue.classList.remove('positive', 'negative');
     if (currentEval > 0.5) {
       barValue.classList.add('positive');
@@ -201,7 +210,7 @@ function initEvaluationBar() {
   }
   
   function changeTarget() {
-    targetEval = (Math.random() - 0.5) * 14;
+    targetEval = (Math.random() - 0.5) * 14; // -7 à +7
   }
   
   updateBar();
@@ -211,6 +220,7 @@ function initEvaluationBar() {
 
 // ==================== ANIMATIONS D'ENTRÉE ====================
 function animatePageLoad() {
+  // Animation du header
   anime({
     targets: '.hud-header',
     translateY: [-60, 0],
@@ -219,6 +229,7 @@ function animatePageLoad() {
     easing: 'easeOutExpo'
   });
   
+  // Animation du panneau gauche
   anime({
     targets: '.left-panel',
     translateX: [-320, 0],
@@ -228,6 +239,7 @@ function animatePageLoad() {
     easing: 'easeOutExpo'
   });
   
+  // Animation du panneau droit
   anime({
     targets: '.right-panel',
     translateX: [340, 0],
@@ -237,6 +249,7 @@ function animatePageLoad() {
     easing: 'easeOutExpo'
   });
   
+  // Animation du footer
   anime({
     targets: '.hud-footer',
     translateY: [50, 0],
@@ -246,6 +259,7 @@ function animatePageLoad() {
     easing: 'easeOutExpo'
   });
   
+  // Animation des cartes de pièces
   anime({
     targets: '.piece-card',
     translateX: [-50, 0],
@@ -255,6 +269,7 @@ function animatePageLoad() {
     easing: 'easeOutQuad'
   });
   
+  // Animation des sections intel
   anime({
     targets: '.intel-section',
     translateY: [30, 0],
@@ -264,6 +279,7 @@ function animatePageLoad() {
     easing: 'easeOutQuad'
   });
   
+  // Animation des barres de progression
   setTimeout(() => {
     const progressBars = document.querySelectorAll('.progress-bar');
     progressBars.forEach((bar, index) => {
@@ -294,6 +310,15 @@ function setupCardHoverAnimations() {
         duration: 300,
         easing: 'easeOutQuad'
       });
+      
+      // Animer la bordure
+      anime({
+        targets: card,
+        borderColor: 'rgba(0, 255, 255, 1)',
+        boxShadow: '0 0 25px rgba(0, 255, 255, 0.5)',
+        duration: 300,
+        easing: 'easeOutQuad'
+      });
     });
     
     card.addEventListener('mouseleave', () => {
@@ -301,6 +326,14 @@ function setupCardHoverAnimations() {
         targets: card,
         translateX: 0,
         scale: 1,
+        duration: 300,
+        easing: 'easeOutQuad'
+      });
+      
+      anime({
+        targets: card,
+        borderColor: 'rgba(0, 255, 255, 0.3)',
+        boxShadow: '0 0 0px rgba(0, 255, 255, 0)',
         duration: 300,
         easing: 'easeOutQuad'
       });
@@ -313,13 +346,26 @@ function animateLogo() {
   anime({
     targets: '.logo-icon',
     scale: [1, 1.1, 1],
+    rotate: [0, 5, 0],
     duration: 3000,
     easing: 'easeInOutSine',
     loop: true
   });
 }
 
-// ==================== GLITCH EFFET ====================
+// ==================== ANIMATION STATUS INDICATOR ====================
+function animateStatusIndicator() {
+  anime({
+    targets: '.status-indicator',
+    scale: [1, 1.3, 1],
+    opacity: [1, 0.5, 1],
+    duration: 2000,
+    easing: 'easeInOutSine',
+    loop: true
+  });
+}
+
+// ==================== ANIMATION GLITCH EFFET ====================
 function triggerGlitch() {
   const glitchOverlay = document.querySelector('.glitch-overlay');
   if (glitchOverlay) {
@@ -330,9 +376,10 @@ function triggerGlitch() {
   }
 }
 
-// ==================== SCAN LINE ====================
+// ==================== ANIMATION SCAN LINE ====================
 function animateScanLine() {
   const scanLine = document.createElement('div');
+  scanLine.className = 'scan-effect';
   scanLine.style.cssText = `
     position: fixed;
     left: 0;
@@ -357,37 +404,49 @@ function animateScanLine() {
   });
 }
 
+// Déclencher un scan périodiquement
 setInterval(animateScanLine, 15000);
 
 // ==================== INITIALISATION ====================
 document.addEventListener('DOMContentLoaded', () => {
+  // Démarrer les timers
   setInterval(updateMissionTimer, 1000);
   setInterval(updateCurrentTime, 1000);
   updateCurrentTime();
   
+  // Mises à jour périodiques
   setInterval(animateCPU, 3000);
   setInterval(animateTargets, 5000);
   setInterval(updateTacticalData, 7000);
   setInterval(updateNotification, 8000);
   
+  // Glitch aléatoire
   setInterval(() => {
     if (Math.random() > 0.7) {
       triggerGlitch();
     }
   }, 10000);
   
+  // Initialiser la barre d'évaluation
   setTimeout(initEvaluationBar, 500);
   
+  // Animations d'entrée
   animatePageLoad();
-  setupCardHoverAnimations();
-  animateLogo();
   
+  // Setup hover animations
+  setupCardHoverAnimations();
+  
+  // Animations continues
+  animateLogo();
+  animateStatusIndicator();
+  
+  // Premier scan
   setTimeout(animateScanLine, 2000);
   
   console.log('✅ Animations Anime.js initialisées');
 });
 
-// Export pour utilisation externe
+// ==================== EXPORT POUR UTILISATION EXTERNE ====================
 window.animeHelpers = {
   triggerGlitch,
   animateScanLine,

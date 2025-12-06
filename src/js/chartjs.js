@@ -2,13 +2,7 @@
  * ============================================
  * CHARTJS.JS - Graphiques avec Chart.js
  * ============================================
- * Import depuis node_modules via importmap
  */
-
-import { Chart, registerables } from 'chart.js';
-
-// Enregistrer tous les composants Chart.js
-Chart.register(...registerables);
 
 console.log('📊 Initialisation des graphiques Chart.js...');
 
@@ -158,12 +152,10 @@ function createActivityChart() {
 
   // Mise à jour périodique
   setInterval(() => {
-    if (activityChart) {
-      activityChart.data.datasets[0].data.shift();
-      const newVal = Math.floor(Math.random() * 80 + 20);
-      activityChart.data.datasets[0].data.push(newVal);
-      activityChart.update('none');
-    }
+    activityChart.data.datasets[0].data.shift();
+    const newVal = Math.floor(Math.random() * 80 + 20);
+    activityChart.data.datasets[0].data.push(newVal);
+    activityChart.update('none');
   }, 3000);
 }
 
@@ -243,7 +235,7 @@ function createRadarChart(skills) {
   console.log('✅ Graphique Radar créé');
 }
 
-// ==================== FONCTIONS GLOBALES ====================
+// ==================== MISE À JOUR ELO CHART ====================
 window.updateEloChart = function(masterKey) {
   if (!eloChart || !masterData[masterKey]) return;
   
@@ -253,6 +245,7 @@ window.updateEloChart = function(masterKey) {
   eloChart.update();
 };
 
+// ==================== MISE À JOUR RADAR CHART ====================
 window.updateRadarChart = function(skills) {
   createRadarChart(skills);
 };
