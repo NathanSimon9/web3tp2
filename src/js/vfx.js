@@ -1,11 +1,4 @@
-/**
- * ============================================
- * VFX.JS - Effets Visuels + ŒIL ROUGE IRON MAN
- * ============================================
- * - Œil rouge qui scanne l'écran et fixe des cibles
- * - Particules flottantes
- * - Effets de chargement
- */
+
 
 console.log('✨ Initialisation des effets VFX...');
 

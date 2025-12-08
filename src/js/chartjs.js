@@ -1,8 +1,4 @@
-/**
- * ============================================
- * CHARTJS.JS - Graphiques avec Chart.js
- * ============================================
- */
+
 
 console.log('📊 Initialisation des graphiques Chart.js...');
 

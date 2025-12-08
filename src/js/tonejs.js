@@ -1,12 +1,4 @@
-/**
- * ============================================
- * TONEJS.JS - Effets sonores avec Tone.js
- * ============================================
- * Ce fichier gère tous les sons:
- * - Sons d'interface (clics, hovers)
- * - Ambiance futuriste
- * - Sons de scan et alertes
- */
+
 
 console.log('🔊 Initialisation de Tone.js...');
 

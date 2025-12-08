@@ -1,13 +1,4 @@
-/**
- * ============================================
- * BOOTSTRAP.JS - Fonctionnalités Bootstrap
- * ============================================
- * Ce fichier gère toutes les interactions Bootstrap:
- * - Tooltips
- * - Modals
- * - Toggle des panneaux
- * - Composants Bootstrap
- */
+
 
 console.log('🅱️ Initialisation des composants Bootstrap...');
 

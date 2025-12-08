@@ -1,14 +1,4 @@
-/**
- * ============================================
- * ANIMEJS.JS - Animations avec Anime.js
- * ============================================
- * Ce fichier gère toutes les animations:
- * - Timer de mission
- * - Compteurs animés
- * - Animations d'entrée
- * - Effets visuels
- * - Barre d'évaluation
- */
+
 
 console.log('🎬 Initialisation des animations Anime.js...');
 

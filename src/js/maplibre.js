@@ -1,13 +1,4 @@
-/**
- * ============================================
- * MAPLIBRE.JS - Carte Géographique
- * ============================================
- * Ce fichier gère la carte interactive:
- * - Affichage de la carte 3D
- * - Marqueurs des grands maîtres
- * - Navigation automatique entre villes
- * - Interactions avec les profils
- */
+
 
 console.log('🗺️ Initialisation de MapLibre...');
 

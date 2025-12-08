@@ -1,10 +1,4 @@
-/**
- * ============================================
- * ZDOG.JS - Pièces d'échecs 3D avec Three.js
- * ============================================
- * Ce fichier charge les modèles OBJ/MTL des pièces d'échecs
- * Note: Fichier nommé zdog.js pour compatibilité avec les consignes
- */
+
 
 import * as THREE from 'three';
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
